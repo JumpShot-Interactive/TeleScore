@@ -13,3 +13,5 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 ## Tutorial
 <a href="https://www.youtube.com/playlist?list=PLi4lqFw_5klhtGT4aa7mkA3MjtL_7sqXA">Playlist</a></br>
 <a href="https://www.youtube.com/watch?v=kyB8p86VeMk">OBS connection via text files</a>
+## JumpShot Team
+JumpShot team is composed of: riscyseven, TheLittleDoctor, Fisk31, controldelta
