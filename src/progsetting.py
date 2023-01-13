@@ -10,7 +10,7 @@ from os.path import exists
 
 class ProgSetting(object):
     """
-    
+     
     """
     def __new__(cls):
         if not hasattr(cls, 'instance'):

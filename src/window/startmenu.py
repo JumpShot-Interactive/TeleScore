@@ -18,6 +18,7 @@ class StartMenu(QWidget):
         self.openCallBack = openCallBack
         self._initUI()
 
+
     def _initUI(self):
         """
         Initializes the startmenu UI.

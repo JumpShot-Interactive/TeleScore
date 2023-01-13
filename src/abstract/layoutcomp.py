@@ -168,14 +168,14 @@ class LayoutComp(AbstractComp):
     def setModSize(self, origSize: QSize, currSize: QSize):
         self.setSizeRatio(origSize)
 
-        self.setFixedSize(int(currSize.width() * self.wratio),
-         int(currSize.height() * self.hratio))
+        self.setFixedSize(round(currSize.width() * self.wratio),
+         round(currSize.height() * self.hratio))
 
 
     def setModLoc(self, origSize: QSize, currSize: QSize):
         self.setLocRatio(origSize)
 
-        self.move(int(currSize.width() * self.xratio), int(currSize.height() * self.yratio))
+        self.move(round(currSize.width() * self.xratio), round(currSize.height() * self.yratio))
 
 
     def setLocRatio(self, parentGeo: QSize):
@@ -195,10 +195,10 @@ class LayoutComp(AbstractComp):
 
 
     def parentResized(self, currSize: QSize):
-        aWidth = int(currSize.width() * self.wratio)
-        aHeight = int(currSize.height() * self.hratio)
-        aX = int(currSize.width() * self.xratio)
-        aY = int(currSize.height() * self.yratio)
+        aWidth = round(currSize.width() * self.wratio)
+        aHeight = round(currSize.height() * self.hratio)
+        aX = round(currSize.width() * self.xratio)
+        aY = round(currSize.height() * self.yratio)
 
         self.setFixedSize(aWidth, aHeight)
         self.move(aX, aY)
@@ -230,8 +230,8 @@ class LayoutComp(AbstractComp):
             self.setCursor(Qt.CursorShape.ArrowCursor)
             self.boundaryCheck(self.pos())
             self.setModLoc(self.currParSize, self.currParSize)
-            self._properties["X"] = int(self.origParSize.width() * self.xratio)
-            self._properties["Y"] = int(self.origParSize.height() * self.yratio)
+            self._properties["X"] = round(self.origParSize.width() * self.xratio)
+            self._properties["Y"] = round(self.origParSize.height() * self.yratio)
 
             self.attrChanged.emit()
             self._mousePressed = False
