@@ -210,7 +210,8 @@ class LayoutComp(AbstractComp):
     def mouseMoveEvent(self, evt: QMouseEvent) -> None:
         if (self._mousePressed == True and not self._lock):
             pos = self.mapToParent(evt.pos())
-            self.move(pos.x()-self._firstPoint.x(), pos.y()-self._firstPoint.y())
+            if (not self.cornerResizeCheck(pos)):
+                self.move(pos.x()-self._firstPoint.x(), pos.y()-self._firstPoint.y())
         evt.accept()
 
 
@@ -252,24 +253,28 @@ class LayoutComp(AbstractComp):
 
 
     # TODO
-    '''def cornerResizeCheck(self, pos) -> bool:
+    def cornerResizeCheck(self, pos) -> bool:
         """
         Method for resizing by drag. 
         """
         if (pos.x() <= self._resizeRadius and pos.y() <= self._resizeRadius): # Top Left
             self.setCursor(Qt.CursorShape.SizeFDiagCursor)
+            return True
         elif (pos.x() >= self.size().width()-self._resizeRadius and pos.y() <= self._resizeRadius): # Top right
             self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+            return True
         elif (pos.x() <= self._resizeRadius and pos.y() >= self.size().height()-self._resizeRadius): # Bottom right
             self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+            return True
         elif (pos.x() >= self.size().width()-self._resizeRadius and 
                 pos.y() >= self.size().height()-self._resizeRadius): # Bottom left
 
                 newPos = QPoint(pos.x()-self._firstPoint.x(), pos.y()-self._firstPoint.y())
                 self.setFixedSize(self.width() + newPos.x(), self.height() + newPos.y())
                 self.setCursor(Qt.CursorShape.SizeFDiagCursor)
-        else:
-            self.setCursor(Qt.CursorShape.ArrowCursor)'''
+                return True
+        
+        return False
 
 
     def eventFilter(self, obj: QObject, evt: QEvent) -> bool:
