@@ -12,6 +12,13 @@ themeDir = os.path.join(PATH, "src", "theme")
 outputDir = os.path.join(PATH, "Output")
 LICENSE = os.path.join(PATH, "LICENSE")
 
+def convPytoExe() -> list:
+    pyfile = []
+    for dir in sys.path:
+        pyfile.append((dir, "*"))
+    pyfile.append((PATH, "*"))
+    return pyfile
+
 if sys.platform == "win32":
     base = "Win32GUI"
     copy_path = "src"
@@ -20,7 +27,7 @@ if sys.platform == "win32":
      "include_files": src_files,
       "excludes": ["tkinter", "numpy", "pydoc_data", "distutils", "setuptools"],
       "optimize": 2,
-      "replace_paths": [(PATH, "*")]
+      "replace_paths": convPytoExe()
       }
 
 
