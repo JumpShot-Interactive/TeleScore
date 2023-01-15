@@ -159,7 +159,8 @@ class ClockComp(DisplayComp):
             self.buzzAudio = None
 
         font = self.clockLabel.font()
-        font.setPointSize(int(self._properties["Font Size"]))
+        if (not self._properties["Auto Font Size"]):
+            font.setPointSize(int(self._properties["Font Size"]))
         font.setWeight(int(self._properties.getValueFromOption("Font Weight")))
         self.clockLabel.setFont(font)
         self.clockLabel.setStyleSheet(f"background-color:{self._properties['Background Color']};\

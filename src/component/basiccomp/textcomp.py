@@ -57,7 +57,8 @@ class TextComp(DisplayComp):
             self.attrChanged.emit()
 
         font = self.label.font()
-        font.setPointSize(int(self._properties["Font Size"]))
+        if (not self._properties["Auto Font Size"]):
+            font.setPointSize(int(self._properties["Font Size"]))
         font.setWeight(int(self._properties.getValueFromOption("Font Weight")))
         self.label.setFont(font)
         self.label.setStyleSheet(f"background-color:{self._properties['Background Color']};\

@@ -156,7 +156,6 @@ class LayoutComp(AbstractComp):
             self._lockAction.setText("Lock")
 
 
-    # Scenario 1
     def initRatio(self, origSize: QSize, currSize: QSize):
         """
         When the component is first dropped to the layout, we must calculate
@@ -173,7 +172,6 @@ class LayoutComp(AbstractComp):
 
     def setModSize(self, origSize: QSize, currSize: QSize):
         self.setSizeRatio(origSize)
-
         self.setFixedSize(round(currSize.width() * self.wratio),
          round(currSize.height() * self.hratio))
 
