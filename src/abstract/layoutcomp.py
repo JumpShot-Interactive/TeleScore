@@ -42,6 +42,11 @@ class LayoutComp(AbstractComp):
         }
     }
 
+    TOP_LEFT = 1
+    TOP_RIGHT = 2
+    BOTTOM_LEFT = 3
+    BOTTOM_RIGHT = 4
+
     compClicked = pyqtSignal(object)
     attrChanged = pyqtSignal()
 
@@ -50,9 +55,12 @@ class LayoutComp(AbstractComp):
         self._layout = ctrlLayout
         self._connection = Connection(self)
         self._firstPoint = QPoint(1, 1)
+        self._firstPointParent = QPoint(1, 1)
+        self._firstSize = QSize(1, 1)
         self.origSize = QSize(1, 1)
         self._mousePressed = False
-        self._resizeRadius = 5
+        self._mouseResized = 0
+        self._resizeRadius = 10
         self._project = project
         self._lock = False
         self._menu = QMenu(self)
@@ -206,12 +214,41 @@ class LayoutComp(AbstractComp):
         self.currParSize = currSize
 
 
+    def _mouseResize(self, pos):
+        firstPoint = self._firstPoint
+
+        sizeList = [
+            QSize(self._firstSize.width() + firstPoint.x() - pos.x(),
+                    self._firstSize.height() + firstPoint.y() - pos.y()),
+            QSize(pos.x() - firstPoint.x() + self._firstSize.width(),
+                    self._firstSize.height() + firstPoint.y() - pos.y()),
+            QSize(self._firstSize.width() + firstPoint.x() - pos.x(),
+                    pos.y() - firstPoint.y() + self._firstSize.height()), 
+            QSize(pos.x() - firstPoint.x() + self._firstSize.width(),
+                    pos.y() - firstPoint.y() + self._firstSize.height())
+        ]
+
+        moveList = [
+            QPoint(pos.x(), pos.y()),
+            QPoint((firstPoint.x()-self._firstSize.width()), pos.y()),
+            QPoint(pos.x(), (firstPoint.y()-self._firstSize.height())),
+            QPoint((firstPoint.x()-self._firstSize.width()), (firstPoint.y()-self._firstSize.height()))
+        ]
+
+        if (sizeList[self._mouseResized-1].width() > 10 and
+            sizeList[self._mouseResized-1].height() > 10):
+            self.setFixedSize(sizeList[self._mouseResized-1])
+            self.move(moveList[self._mouseResized-1])
+
+
     # Override
     def mouseMoveEvent(self, evt: QMouseEvent) -> None:
         if (self._mousePressed == True and not self._lock):
             pos = self.mapToParent(evt.pos())
-            if (not self.cornerResizeCheck(pos)):
+            if (not self._mouseResized):
                 self.move(pos.x()-self._firstPoint.x(), pos.y()-self._firstPoint.y())
+            else:
+                self._mouseResize(pos)
         evt.accept()
 
 
@@ -222,6 +259,22 @@ class LayoutComp(AbstractComp):
             if (not self._lock):
                 self.setCursor(Qt.CursorShape.SizeAllCursor)
             self._firstPoint = evt.pos()
+            self._firstSize = self.size()
+            self._mouseResized = self.cornerResizeCheck(evt.pos())
+            match self._mouseResized:
+                case self.TOP_LEFT | self.BOTTOM_RIGHT:
+                    self.setCursor(Qt.CursorShape.SizeFDiagCursor)
+                case self.TOP_RIGHT | self.BOTTOM_LEFT:
+                    self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+
+            pointList = [self.pos(),
+                        QPoint(self.pos().x()+self.width(), self.pos().y()),
+                        QPoint(self.pos().x(), self.pos().y()+self.height()),
+                        QPoint(self.pos().x()+self.width(), self.pos().y()+self.height())]
+
+            if (self._mouseResized):
+                self._firstPoint = pointList[self._mouseResized-1]
+
             self._mousePressed = True
         evt.accept()
 
@@ -236,6 +289,14 @@ class LayoutComp(AbstractComp):
 
             self.attrChanged.emit()
             self._mousePressed = False
+
+            if (self._mouseResized):
+                self.setModSize(self.currParSize, self.currParSize)
+                self._properties["Width"] = round(self.origSize.width() * self.wratio)
+                self._properties["Height"] = round(self.origSize.height() * self.hratio)
+                self.attrChanged.emit()
+                self._mouseResized = 0
+        evt.accept()
 
 
     def boundaryCheck(self, pos):
@@ -255,26 +316,24 @@ class LayoutComp(AbstractComp):
     # TODO
     def cornerResizeCheck(self, pos) -> bool:
         """
-        Method for resizing by drag. 
+        Check to see if the mouse is in the corner of the component
         """
-        if (pos.x() <= self._resizeRadius and pos.y() <= self._resizeRadius): # Top Left
-            self.setCursor(Qt.CursorShape.SizeFDiagCursor)
-            return True
-        elif (pos.x() >= self.size().width()-self._resizeRadius and pos.y() <= self._resizeRadius): # Top right
-            self.setCursor(Qt.CursorShape.SizeBDiagCursor)
-            return True
-        elif (pos.x() <= self._resizeRadius and pos.y() >= self.size().height()-self._resizeRadius): # Bottom right
-            self.setCursor(Qt.CursorShape.SizeBDiagCursor)
-            return True
-        elif (pos.x() >= self.size().width()-self._resizeRadius and 
-                pos.y() >= self.size().height()-self._resizeRadius): # Bottom left
+        width = self.size().width()
+        height = self.size().height()
+        x = pos.x()
+        y = pos.y()
+        location = [
+            [QPoint(0, 0), QPoint(self._resizeRadius, self._resizeRadius)],
+            [QPoint(width-self._resizeRadius, 0), QPoint(width, self._resizeRadius)],
+            [QPoint(0, height-self._resizeRadius), QPoint(self._resizeRadius, height)],
+            [QPoint(width-self._resizeRadius, height-self._resizeRadius), QPoint(width, height)]
+        ]
 
-                newPos = QPoint(pos.x()-self._firstPoint.x(), pos.y()-self._firstPoint.y())
-                self.setFixedSize(self.width() + newPos.x(), self.height() + newPos.y())
-                self.setCursor(Qt.CursorShape.SizeFDiagCursor)
-                return True
-        
-        return False
+        for i, loc in enumerate(location):
+            if (loc[0].x() <= x <= loc[1].x() and loc[0].y() <= y <= loc[1].y()):
+                return i + 1
+
+        return 0
 
 
     def eventFilter(self, obj: QObject, evt: QEvent) -> bool:
