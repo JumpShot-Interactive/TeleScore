@@ -66,7 +66,7 @@ class TabComp(AbstractComp):
         :return: QSize, the size of the projection screen
         """
         ratio = min(size.width() / projSize.width(), size.height() / projSize.height())
-        return QSize(int(projSize.width() * ratio), int(projSize.height() * ratio))
+        return QSize(round(projSize.width() * ratio), round(projSize.height() * ratio))
 
 
     def getLayout(self):

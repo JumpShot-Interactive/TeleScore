@@ -199,6 +199,7 @@ class Editor(QMainWindow):
 
     def _popOutTab(self, clicked):
         tab = self.tabWidget.currentWidget()
+        self.clearCurrComp()
 
         dialog = TabDialog(tab, self._popOutTabClosed, self)
         dialog.setWindowTitle(tab.objectName())
@@ -209,6 +210,7 @@ class Editor(QMainWindow):
 
 
     def _popOutTabClosed(self, tab):
+        self.clearCurrComp()
         self.tabWidget.addTab(tab.getTab(), tab.getTab().objectName())
         self._refreshTabButton()
 

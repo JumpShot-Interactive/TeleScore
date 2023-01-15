@@ -60,7 +60,7 @@ class LayoutComp(AbstractComp):
         self.origSize = QSize(1, 1)
         self._mousePressed = False
         self._mouseResized = 0
-        self._resizeRadius = 10
+        self._resizeRadius = 20
         self._project = project
         self._lock = False
         self._menu = QMenu(self)
@@ -126,8 +126,8 @@ class LayoutComp(AbstractComp):
         self.setFixedSize(self._properties["Width"], self._properties["Height"])
         self.origSize = QSize(self._properties["Width"], self._properties["Height"])
 
-        self.setModLoc(self.origParSize, self.currParSize)
-        self.setModSize(self.origParSize, self.currParSize)
+        self.setModLoc(self._layout.getProjSize(), self._layout.getCurrSize())
+        self.setModSize(self._layout.getProjSize(), self._layout.getCurrSize())
         self._reconfProperty()
 
 
@@ -165,8 +165,6 @@ class LayoutComp(AbstractComp):
         :param origSize: QGeometry object that contains location and size
         """
         self.origSize = self.size()
-        self.origParSize = origSize
-        self.currParSize = currSize
         self.setLocRatio(currSize)
         self.setSizeRatio(origSize)
         
@@ -211,8 +209,6 @@ class LayoutComp(AbstractComp):
         self.setFixedSize(aWidth, aHeight)
         self.move(aX, aY)
 
-        self.currParSize = currSize
-
 
     def _mouseResize(self, pos):
         firstPoint = self._firstPoint
@@ -235,8 +231,8 @@ class LayoutComp(AbstractComp):
             QPoint((firstPoint.x()-self._firstSize.width()), (firstPoint.y()-self._firstSize.height()))
         ]
 
-        if (sizeList[self._mouseResized-1].width() > 10 and
-            sizeList[self._mouseResized-1].height() > 10):
+        if (sizeList[self._mouseResized-1].width() > 30 and
+            sizeList[self._mouseResized-1].height() > 30):
             self.setFixedSize(sizeList[self._mouseResized-1])
             self.move(moveList[self._mouseResized-1])
 
@@ -256,16 +252,10 @@ class LayoutComp(AbstractComp):
     def mousePressEvent(self, evt: QMouseEvent) -> None:
         if (self._project.editMode()):
             self.compClicked.emit(self)
-            if (not self._lock):
-                self.setCursor(Qt.CursorShape.SizeAllCursor)
+            self._mouseResized = self.cornerResizeCheck(evt.pos())
             self._firstPoint = evt.pos()
             self._firstSize = self.size()
-            self._mouseResized = self.cornerResizeCheck(evt.pos())
-            match self._mouseResized:
-                case self.TOP_LEFT | self.BOTTOM_RIGHT:
-                    self.setCursor(Qt.CursorShape.SizeFDiagCursor)
-                case self.TOP_RIGHT | self.BOTTOM_LEFT:
-                    self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+            self._mousePressed = True
 
             pointList = [self.pos(),
                         QPoint(self.pos().x()+self.width(), self.pos().y()),
@@ -275,45 +265,40 @@ class LayoutComp(AbstractComp):
             if (self._mouseResized):
                 self._firstPoint = pointList[self._mouseResized-1]
 
-            self._mousePressed = True
+            if (not self._lock):
+                match self._mouseResized:
+                    case self.TOP_LEFT | self.BOTTOM_RIGHT:
+                        self.setCursor(Qt.CursorShape.SizeFDiagCursor)
+                    case self.TOP_RIGHT | self.BOTTOM_LEFT:
+                        self.setCursor(Qt.CursorShape.SizeBDiagCursor)
+                    case _:
+                        self.setCursor(Qt.CursorShape.SizeAllCursor)
         evt.accept()
 
     # Override
     def mouseReleaseEvent(self, evt: QMouseEvent) -> None:
+        self.setCursor(Qt.CursorShape.ArrowCursor)
         if (self._project.editMode() and not self._lock):
-            self.setCursor(Qt.CursorShape.ArrowCursor)
-            self.boundaryCheck(self.pos())
-            self.setModLoc(self.currParSize, self.currParSize)
-            self._properties["X"] = round(self.origParSize.width() * self.xratio)
-            self._properties["Y"] = round(self.origParSize.height() * self.yratio)
+            self.setModLoc(self._layout.getCurrSize(), self._layout.getCurrSize())
+            self._properties["X"] = round(self._layout.getProjSize().width() * self.xratio)
+            self._properties["Y"] = round(self._layout.getProjSize().height() * self.yratio)
 
-            self.attrChanged.emit()
             self._mousePressed = False
 
             if (self._mouseResized):
-                self.setModSize(self.currParSize, self.currParSize)
-                self._properties["Width"] = round(self.origSize.width() * self.wratio)
-                self._properties["Height"] = round(self.origSize.height() * self.hratio)
-                self.attrChanged.emit()
+                self.setSizeRatio(self._layout.getCurrSize())
+                self.setLocRatio(self._layout.getCurrSize())
+                self._properties["Width"] = round(self._layout.getProjSize().width() * self.wratio)
+                self._properties["Height"] = round(self._layout.getProjSize().height() * self.hratio)
+                self.origSize = QSize(self._properties["Width"], self._properties["Height"])
                 self._mouseResized = 0
-        evt.accept()
+            
+            self.attrChanged.emit()
+
+        if (evt is not None):
+            evt.accept()
 
 
-    def boundaryCheck(self, pos):
-        if (pos.x() <= 0):
-            self.move(1, pos.y())
-
-        if (pos.y() <= 0):
-            self.move(self.x(), 1)
-
-        if (pos.x() + self.width() >= self.currParSize.width()):
-            self.move(self.currParSize.width()-self.width(), self.y())
-
-        if (pos.y() + self.height() >= self.currParSize.height()):
-            self.move(self.x(), self.currParSize.height()-self.height())
-
-
-    # TODO
     def cornerResizeCheck(self, pos) -> bool:
         """
         Check to see if the mouse is in the corner of the component
@@ -339,11 +324,15 @@ class LayoutComp(AbstractComp):
     def eventFilter(self, obj: QObject, evt: QEvent) -> bool:
         if (evt.type() == QEvent.Type.MouseMove):
             self.mouseMoveEvent(evt)
+            return True
         elif (evt.type() == QEvent.Type.MouseButtonPress):
             self.mousePressEvent(evt)
         elif (evt.type() == QEvent.Type.MouseButtonRelease):
             self.mouseReleaseEvent(evt)
-        return False 
+        else:
+            return super().eventFilter(obj, evt)
+
+        return False
 
 
     @abstractmethod
