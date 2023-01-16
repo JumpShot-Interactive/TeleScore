@@ -23,7 +23,7 @@ class FileSelWidget(QWidget):
                 self.absPathButton.clicked.connect(self._saveDir)
 
         self.callBack = callback
-        self.lineEdit.textEdited.connect(self._textEdited)
+        self.lineEdit.editingFinished.connect(self._textEdited)
         self.clrButton.clicked.connect(self._clrClicked)
 
 

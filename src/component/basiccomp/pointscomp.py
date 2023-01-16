@@ -80,9 +80,8 @@ class PointsComp(DisplayComp):
         self.points.setSuffix(self._properties["Suffix (st, nd, rd, th)"])
         self.points.setValue(self.points.getValue())
         if (self._properties["Enable File Output"]):
-            self.fileOut.setOutputFile(self._properties["File Output Location"])
             if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-                self.attrChanged.emit()
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
             self.points.enableFileOut(self.fileOut)
         else:
             self.points.disableFileOut()

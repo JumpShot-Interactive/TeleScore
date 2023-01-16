@@ -22,7 +22,7 @@ def convPytoExe() -> list:
 if sys.platform == "win32":
     base = "Win32GUI"
     copy_path = "src"
-    src_files = [(themeDir, os.path.join("src", "theme")), (outputDir, "Output"), (LICENSE, "LICENSE")]
+    src_files = [(themeDir, os.path.join("src", "theme")), (LICENSE, "LICENSE")]
     build_exe_options = {"packages": py_package,
      "include_files": src_files,
       "excludes": ["tkinter", "numpy", "pydoc_data", "distutils", "setuptools"],

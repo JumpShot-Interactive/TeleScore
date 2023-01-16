@@ -135,9 +135,8 @@ class ClockComp(DisplayComp):
 
         self.defaultTime = self._properties["Default Time"]
         if (self._properties["Enable File Output"]):
-            self.fileOut.setOutputFile(self._properties["File Output Location"])
             if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-                self.attrChanged.emit()
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
             self.clock.enableFileOut(self.fileOut)
         else:
             self.clock.disableFileOut()

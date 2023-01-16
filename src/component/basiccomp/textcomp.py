@@ -52,9 +52,9 @@ class TextComp(DisplayComp):
 
     # Override
     def _reconfProperty(self):
-        self.fileOut.setOutputFile(self._properties["File Output Location"])
-        if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-            self.attrChanged.emit()
+        if (self._properties["Enable File Output"]):
+            if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
 
         font = self.label.font()
         if (not self._properties["Auto Font Size"]):
