@@ -116,8 +116,11 @@ class Clock(QObject):
 
 
     def setClockTick(self, tick):
-        if (tick >= 0 and tick < 432000 and not self.clock.isActive()):
+        if (tick >= 0 and tick < 432000):
             self.tick = tick
+            if (self.clock.isActive()):
+                self.stopClock()
+                self.startClock()
             self._valueChanged()
 
 
