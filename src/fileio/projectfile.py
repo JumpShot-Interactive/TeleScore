@@ -4,6 +4,7 @@ Written by: riscyseven
 """
 
 from json import load, dump
+from copy import deepcopy
 
 from attr import PropInstType, CompAttr, ProjAttr
 from component.compfactory import CompFactory
@@ -29,8 +30,9 @@ class ProjectFile(AbstractFile):
     # Override
     def save(self):
         json = {}
-        self.project.getProperty()
-        json[ProjAttr.HEADER] = self.convProptoDict(self.project.getProperty().getAllPropDict())
+        projProp = deepcopy(self.project.getProperty().getAllPropDict())
+        projProp["FN"].setValue("")
+        json[ProjAttr.HEADER] = self.convProptoDict(projProp)
 
         los = []
 

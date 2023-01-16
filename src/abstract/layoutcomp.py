@@ -248,7 +248,7 @@ class LayoutComp(AbstractComp):
 
     # Override
     def mousePressEvent(self, evt: QMouseEvent) -> None:
-        if (self._project.editMode()):
+        if (evt.button() == Qt.MouseButton.LeftButton and self._project.editMode()):
             self.compClicked.emit(self)
             self._mouseResized = self.cornerResizeCheck(evt.pos())
             self._firstPoint = evt.pos()
