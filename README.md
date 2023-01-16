@@ -6,9 +6,9 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 ## Download
 <a href="https://github.com/JumpShot-Interactive/TeleScore/releases/download/Beta/TeleScore.zip">Download</a>
 ## Showcase
-<img src="(https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase1.gif" alt="drawing" width="400"/>
-<img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase2.gif" alt="drawing" width="400"/>
-<img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase0.png" alt="drawing" width="400"/>
+<img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase1.gif" alt="drawing" width="600"/>
+<img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase2.gif" alt="drawing" width="600"/>
+<img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase0.png" alt="drawing" width="600"/>
 ## Features include:
 
     Drag and drop editor
