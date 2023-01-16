@@ -8,7 +8,9 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 ## Showcase
 <img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase1.gif" alt="drawing" width="600"/>
 <img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase2.gif" alt="drawing" width="600"/>
+<img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase3.gif" alt="drawing" width="600"/>
 <img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase0.png" alt="drawing" width="600"/>
+
 ## Features include:
 
     Drag and drop editor
@@ -34,11 +36,11 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
     Improved editor: copy/paste/undo/redo
     macOS/Linux
 
-## Support/Discord:
-<a href="https://discord.gg/q9NwK8XAAK">Discord</a>
 ## Tutorial
 [![Playlist](https://img.youtube.com/vi/94yoz_TAwKk/0.jpg)](https://www.youtube.com/playlist?list=PLi4lqFw_5klhtGT4aa7mkA3MjtL_7sqXA)
 [![Playlist](https://img.youtube.com/vi/kyB8p86VeMk/0.jpg)](https://www.youtube.com/watch?v=kyB8p86VeMk)
+## Support/Discord:
+<a href="https://discord.gg/q9NwK8XAAK">Discord</a>
 ## How to build
 1. Make sure you have Python v3.11.1 installed.
 2. Using command line, head to the root directory of the project (Not src folder, folder above it)
