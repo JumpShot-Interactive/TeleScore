@@ -135,9 +135,8 @@ class ClockComp(DisplayComp):
 
         self.defaultTime = self._properties["Default Time"]
         if (self._properties["Enable File Output"]):
-            self.fileOut.setOutputFile(self._properties["File Output Location"])
             if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-                self.attrChanged.emit()
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
             self.clock.enableFileOut(self.fileOut)
         else:
             self.clock.disableFileOut()
@@ -159,7 +158,8 @@ class ClockComp(DisplayComp):
             self.buzzAudio = None
 
         font = self.clockLabel.font()
-        font.setPointSize(int(self._properties["Font Size"]))
+        if (not self._properties["Auto Font Size"]):
+            font.setPointSize(int(self._properties["Font Size"]))
         font.setWeight(int(self._properties.getValueFromOption("Font Weight")))
         self.clockLabel.setFont(font)
         self.clockLabel.setStyleSheet(f"background-color:{self._properties['Background Color']};\

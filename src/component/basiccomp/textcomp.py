@@ -52,12 +52,13 @@ class TextComp(DisplayComp):
 
     # Override
     def _reconfProperty(self):
-        self.fileOut.setOutputFile(self._properties["File Output Location"])
-        if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-            self.attrChanged.emit()
+        if (self._properties["Enable File Output"]):
+            if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
 
         font = self.label.font()
-        font.setPointSize(int(self._properties["Font Size"]))
+        if (not self._properties["Auto Font Size"]):
+            font.setPointSize(int(self._properties["Font Size"]))
         font.setWeight(int(self._properties.getValueFromOption("Font Weight")))
         self.label.setFont(font)
         self.label.setStyleSheet(f"background-color:{self._properties['Background Color']};\

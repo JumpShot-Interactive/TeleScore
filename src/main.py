@@ -11,14 +11,10 @@ from traceback import format_exc
 DEBUG = False
 
 if not DEBUG:
-    try:
-        from gm_resources import resourcePath, GMessageBox
-        from window.mainwindow import MainWindow
-    except:
-        import src
-        sys.path.append(src.CURR_PATH)
-        from gm_resources import resourcePath
-        from window.mainwindow import MainWindow
+    import src
+    sys.path.append(src.CURR_PATH)
+    from gm_resources import resourcePath
+    from window.mainwindow import MainWindow
 else:
     from gm_resources import resourcePath, GMessageBox
     from window.mainwindow import MainWindow

@@ -62,7 +62,7 @@ class PropWidgetItem(QTreeWidgetItem):
         self.callBack(self._prop, font.family())
 
 
-    def _checkBoxChanged(self, checked:int):
+    def _checkBoxChanged(self, checked: int):
         self.callBack(self._prop, checked)
 
     

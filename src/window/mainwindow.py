@@ -74,6 +74,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.toolBar.setVisible(False)
 
+        #self.editor = Editor()
+        #self.setCentralWidget(self.editor)
         self.startMenu = StartMenu(self._newTriggered, self._openTriggered)
         self.setCentralWidget(self.startMenu)
         self._windowChanged()

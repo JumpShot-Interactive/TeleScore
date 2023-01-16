@@ -56,9 +56,8 @@ class ImageComp(DisplayComp):
     # Override 
     def _reconfProperty(self) -> None:
         if (self._properties["Enable File Output"]):
-            self.fileOut.setOutputFile(self._properties["File Output Location"])
             if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-                self.attrChanged.emit()
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
         
         self._setImage(self._properties["Default Image"])
 

@@ -80,16 +80,16 @@ class PointsComp(DisplayComp):
         self.points.setSuffix(self._properties["Suffix (st, nd, rd, th)"])
         self.points.setValue(self.points.getValue())
         if (self._properties["Enable File Output"]):
-            self.fileOut.setOutputFile(self._properties["File Output Location"])
             if (self.fileOut.getOutputFile() != self._properties["File Output Location"]):
-                self.attrChanged.emit()
+                self.fileOut.setOutputFile(self._properties["File Output Location"])
             self.points.enableFileOut(self.fileOut)
         else:
             self.points.disableFileOut()
         self.points.setClearScoreZero(self._properties["Clr when points = 0"])
 
         font = self.label.font()
-        font.setPointSize(int(self._properties["Font Size"]))
+        if (not self._properties["Auto Font Size"]):
+            font.setPointSize(int(self._properties["Font Size"]))
         font.setWeight(int(self._properties.getValueFromOption("Font Weight")))
         self.label.setFont(font)
         self.label.setStyleSheet(f"background-color:{self._properties['Background Color']};\

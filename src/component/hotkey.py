@@ -21,7 +21,7 @@ class HotKey(QObject):
             except Exception:
                 msg = GMessageBox("Hotkey not registered",
                  "This key sequence is not accepted, please try a different sequence",
-                  "Info", self)
+                  "Info")
                 msg.exec()
 
             key = keyboard.HotKey(
