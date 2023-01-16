@@ -26,17 +26,17 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
     Improved editor: copy/paste/undo/redo
     macOS/Linux
 
-## How to build
-1. Make sure you have Python v3.10.6 installed.
-2. Using command line, head to the root directory of the project (Not src folder, folder above it)
-3. Using pip, install the dependencies by using "pip install -r requirements.txt"
-4. If no errors are shown, use "python src/main.py" to build the software
 ## Download
 <a href="https://github.com/JumpShot-Interactive/TeleScore/releases/download/Beta/TeleScore.zip">Download</a>
 ## Support/Discord:
 <a href="https://discord.gg/q9NwK8XAAK">Discord</a>
 ## Tutorial
-<a href="https://www.youtube.com/playlist?list=PLi4lqFw_5klhtGT4aa7mkA3MjtL_7sqXA">Playlist</a></br>
-<a href="https://www.youtube.com/watch?v=kyB8p86VeMk">OBS connection via text files</a>
+[![Playlist](https://img.youtube.com/vi/94yoz_TAwKk/0.jpg)](https://www.youtube.com/playlist?list=PLi4lqFw_5klhtGT4aa7mkA3MjtL_7sqXA)
+[![Playlist](https://img.youtube.com/vi/kyB8p86VeMk/0.jpg)](https://www.youtube.com/watch?v=kyB8p86VeMk)
+## How to build
+1. Make sure you have Python v3.11.1 installed.
+2. Using command line, head to the root directory of the project (Not src folder, folder above it)
+3. Using pip, install the dependencies by using "pip install -r requirements.txt"
+4. If no errors are shown, use "python src/main.py" to build the software
 ## JumpShot Team
 JumpShot team is composed of: riscyseven, TheLittleDoctor, Fisk31, controldelta
