@@ -42,7 +42,6 @@ class PointsComp(DisplayComp):
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
 
         self._properties.removeProp("Display Text")
-        self._properties.removeProp("Text Alignment")
 
 
     # Override
