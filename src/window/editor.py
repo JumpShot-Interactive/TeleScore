@@ -96,7 +96,7 @@ class Editor(QMainWindow):
 
         # This is a bit redundant. If there is a simpler way of doing this, please change it.
         self.toolBar.addWidget(QPushButton(QtGui.QIcon(resourcePath("src/resources/icon.ico")),
-         " TeleScore v1.0Beta"))
+         " TeleScore v1.0.1 Beta"))
         self.toolBar.addSeparator()
         self.addTabPushButton = QPushButton("Add Tab")
         self.toolBar.addWidget(self.addTabPushButton)
