@@ -41,6 +41,7 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 [![Playlist](https://img.youtube.com/vi/kyB8p86VeMk/0.jpg)](https://www.youtube.com/watch?v=kyB8p86VeMk)
 ## Support/Discord:
 <a href="https://discord.gg/q9NwK8XAAK">Discord</a>
+If you are getting kicked out, please contact us at gmforobs@gmail.com
 ## How to build
 1. Make sure you have Python v3.11.1 installed.
 2. Using command line, head to the root directory of the project (Not src folder, folder above it)
