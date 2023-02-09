@@ -40,7 +40,7 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 [![Playlist](https://img.youtube.com/vi/94yoz_TAwKk/0.jpg)](https://www.youtube.com/playlist?list=PLi4lqFw_5klhtGT4aa7mkA3MjtL_7sqXA)
 [![Playlist](https://img.youtube.com/vi/kyB8p86VeMk/0.jpg)](https://www.youtube.com/watch?v=kyB8p86VeMk)
 ## Support/Discord:
-<a href="https://discord.gg/q9NwK8XAAK">Discord</a>
+<a href="https://discord.gg/q9NwK8XAAK">Discord</a></br>
 If you are getting kicked out, please contact us at gmforobs@gmail.com
 ## How to build
 1. Make sure you have Python v3.11.1 installed.
