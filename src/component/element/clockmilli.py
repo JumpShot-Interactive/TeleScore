@@ -46,12 +46,12 @@ class ClockMilli(Clock):
     def setClockFromStr(self, str, timeFormat=None) -> bool:
         if (timeFormat == None):
             timeFormat = self.timeFormat
-        conv = self._convStrtoTick(str, timeFormat)
-        if (conv > -1):
-            self.setClockTick(conv)
+        time = QTime.fromString(str, timeFormat)
+        if (time.isValid()):
+            self.setClockTick(time.hour()*36000+time.minute()*600+time.second()*10+time.msec()//100)
         else:
             self._valueChanged()
-        return conv > -1
+        return time.isValid()
 
     
     def _stopWatch(self):
@@ -90,9 +90,13 @@ class ClockMilli(Clock):
 
     # Override
     def _convTicktoStr(self, tick: int, timeFormat: str) -> str:
-        dict = {'z': tick % 10, 's': (tick // 10) % 60, 'm': (tick // 600) % 60, 'h': (tick // 36000) % 24}
+        dict = {}
+        dict["z"] = tick % 10
+        dict["s"] = (tick // 10) % 60
+        dict["m"] = (tick // 600) % 60
         if (not self.carryOver):
             dict["m"] = (tick // 600)
+        dict["h"] = (tick // 36000) % 24
 
         lastPos = 0
         currChar = ''
@@ -110,50 +114,6 @@ class ClockMilli(Clock):
                 lastPos = currPos
 
         return newStr
-
-
-    # TODO: Refractor this function
-    def _convStrtoTick(self, str, timeFormat) -> int:
-        dict = {'z': 1, 's': 10, 'm': 600, 'h': 36000}
-        digitPos = 0
-        currVal = 0
-        over = 0
-        sum = 0
-        lastKey = None
-        timeFormat = f"{timeFormat} "
-        str = f"{str} "
-
-        for currChar in str:
-            if (lastKey == None):
-                lastKey = timeFormat[digitPos]
-
-            if (currChar.isdigit()):
-                if (timeFormat[digitPos] in dict and lastKey == timeFormat[digitPos]):
-                    currVal = currVal * 10 + int(currChar)
-                    lastKey = timeFormat[digitPos]
-                    digitPos += 1
-                    over += 1
-                elif (timeFormat[digitPos] not in dict):
-                    if (over <= 1):
-                        currVal = currVal * 10 + int(currChar)
-                        over += 1
-                    else:
-                        return -1
-                else:
-                    return -1
-            elif (currChar == timeFormat[digitPos]):
-                if (lastKey in dict):
-                    sum += currVal * dict[lastKey]
-                else:
-                    return -1
-                digitPos += 1
-                currVal = 0
-                over = 0
-                lastKey = None
-            else:
-                return -1 
-        return sum
-
 
     def isRunning(self) -> bool:
         return self.clock.isActive()

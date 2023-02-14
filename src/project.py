@@ -44,7 +44,7 @@ class Project:
         self.property["Date"] = ""
         self.property["FN"] = ""
         self.property["Author"] = getlogin()
-        self.property["Version"] = "1.0.1 Beta"
+        self.property["Version"] = "1.0Beta"
         self._renameLOCallBack = []
         self._renameCompCallBack = []
 

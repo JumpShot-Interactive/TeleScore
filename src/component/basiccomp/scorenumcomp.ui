@@ -87,7 +87,7 @@ QPushButton:pressed {
      </property>
      <property name="styleSheet">
       <string notr="true">color: white;
-background-color: #474646;</string>
+background-color: #808080;</string>
      </property>
      <property name="inputMask">
       <string>####</string>

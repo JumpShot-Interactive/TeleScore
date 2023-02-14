@@ -19,16 +19,15 @@ def convPytoExe() -> list:
     pyfile.append((PATH, "*"))
     return pyfile
 
-if sys.platform == "win32":
-    base = "Win32GUI"
-    copy_path = "src"
-    src_files = [(themeDir, os.path.join("src", "theme")), (LICENSE, "LICENSE")]
-    build_exe_options = {"packages": py_package,
-     "include_files": src_files,
-      "excludes": ["tkinter", "numpy", "pydoc_data", "distutils", "setuptools"],
-      "optimize": 2,
-      "replace_paths": convPytoExe()
-      }
+
+copy_path = "src"
+src_files = [(themeDir, os.path.join("src", "theme")), (LICENSE, "LICENSE")]
+build_exe_options = {"packages": py_package,
+ "include_files": src_files,
+  "excludes": ["tkinter", "numpy", "pydoc_data", "distutils", "setuptools"],
+  "optimize": 2,
+  "replace_paths": convPytoExe()
+  }
 
 
 exes = [Executable("src/main.py",

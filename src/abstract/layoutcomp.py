@@ -62,8 +62,8 @@ class LayoutComp(AbstractComp):
         self._mouseResized = 0
         self._resizeRadius = 20
         self._project = project
+        self._lock = False
         self._menu = QMenu(self)
-        self._menu.setStyleSheet("QMenu {background-color: #2d2d2d;}")
         self._deleteAction = QAction("Delete", self._menu)
         self._lockAction = QAction("Lock", self._menu)
         self._moveUp = QAction("Move Up", self._menu)
@@ -78,7 +78,6 @@ class LayoutComp(AbstractComp):
         self._moveDown.triggered.connect(self._moveDownTriggered)
 
         self._properties.appendPropHead("Geometry Properties", self.geoProperty)
-        self._properties["Lock"] = False
         self._firstTimeProp()
 
         uic.loadUi(resourcePath(uiFile), self) # Load the .ui file
@@ -130,10 +129,6 @@ class LayoutComp(AbstractComp):
         self.setModLoc(self._layout.getProjSize(), self._layout.getCurrSize())
         self.setModSize(self._layout.getProjSize(), self._layout.getCurrSize())
         self._reconfProperty()
-        #self.setToolTip(self.objectName())
-        
-        if self._properties["Lock"]:
-            self._lockAction.setText("Unlock")
 
 
     # Override
@@ -143,9 +138,9 @@ class LayoutComp(AbstractComp):
         :param evt: Right click event
         :return: none
         """
-        if (self._project.inEditor()):
-            self._menu.move(evt.globalX(), evt.globalY())
-            self._menu.exec()
+
+        self._menu.move(evt.globalX(), evt.globalY())
+        self._menu.exec()
 
 
     def _deleteTriggered(self):
@@ -153,8 +148,8 @@ class LayoutComp(AbstractComp):
 
 
     def _lockTriggered(self):
-        self._properties["Lock"] = not self._properties["Lock"]
-        if self._properties["Lock"]:
+        self._lock = not self._lock
+        if self._lock:
             self.mouseReleaseEvent(None)
             self._lockAction.setText("Unlock")
         else:
@@ -242,7 +237,7 @@ class LayoutComp(AbstractComp):
 
     # Override
     def mouseMoveEvent(self, evt: QMouseEvent) -> None:
-        if (self._mousePressed == True and not self._properties["Lock"]):
+        if (self._mousePressed == True and not self._lock):
             pos = self.mapToParent(evt.pos())
             if (not self._mouseResized):
                 self.move(pos.x()-self._firstPoint.x(), pos.y()-self._firstPoint.y())
@@ -268,7 +263,7 @@ class LayoutComp(AbstractComp):
             if (self._mouseResized):
                 self._firstPoint = pointList[self._mouseResized-1]
 
-            if (not self._properties["Lock"]):
+            if (not self._lock):
                 match self._mouseResized:
                     case self.TOP_LEFT | self.BOTTOM_RIGHT:
                         self.setCursor(Qt.CursorShape.SizeFDiagCursor)
@@ -281,11 +276,12 @@ class LayoutComp(AbstractComp):
     # Override
     def mouseReleaseEvent(self, evt: QMouseEvent) -> None:
         self.setCursor(Qt.CursorShape.ArrowCursor)
-        self._mousePressed = False
-        if (self._project.editMode() and not self._properties["Lock"]):
+        if (self._project.editMode() and not self._lock):
             self.setModLoc(self._layout.getCurrSize(), self._layout.getCurrSize())
             self._properties["X"] = round(self._layout.getProjSize().width() * self.xratio)
             self._properties["Y"] = round(self._layout.getProjSize().height() * self.yratio)
+
+            self._mousePressed = False
 
             if (self._mouseResized):
                 self.setSizeRatio(self._layout.getCurrSize())
