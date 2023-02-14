@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>661</width>
-    <height>211</height>
+    <height>229</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Version: 1.0 Beta</string>
+      <string>Version: 1.0.1 Beta</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -38,6 +38,9 @@
      </property>
      <property name="text">
       <string>Made with love by your JumpShot team.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
@@ -60,11 +63,11 @@
     <widget class="QLabel" name="label_4">
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>JumpShot team is composed of: riscyseven, TheLittleDoc, Fisk31, controldelta</string>
+      <string>JumpShot team is composed of: riscyseven, TheLittleDoc, Fisk31, controldelta, Glenn</string>
      </property>
     </widget>
    </item>
@@ -76,7 +79,10 @@
       </font>
      </property>
      <property name="text">
-      <string>Discord: &lt;a href=&quot;https://discord.gg/q9NwK8XAAK&quot;&gt;Link&lt;/a&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Discord/Support/Community/Resource: &lt;/span&gt;&lt;a href=&quot;https://discord.gg/q9NwK8XAAK&quot;&gt;&lt;span style=&quot; font-size:14pt; text-decoration: underline; color:#007af4;&quot;&gt;Link&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
