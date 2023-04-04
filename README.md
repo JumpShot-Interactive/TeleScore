@@ -1,3 +1,4 @@
+![GitHub all releases](https://img.shields.io/github/downloads/JumpShot-Interactive/TeleScore/total)
 <img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/logo.png" alt="logo" width="200"/>
 
 # TeleScore
