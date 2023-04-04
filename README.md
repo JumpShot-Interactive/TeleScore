@@ -4,7 +4,7 @@
 TeleScore is an open-source PyQt-based customizable livestream scoring utility. Designed to be flexible to accommodate scoring and timing different sports, both TeleScore's controls and outputs can be modified to best fit your needs. The program will allow for both text outputs as well as, eventually, graphical output to simplify setup and operation. TeleScore aims to be easy enough for the beginner, but feature-rich enough for professionals.  
 TeleScore is currently undergoing a full rewrite to fully utilize the flexible PyQt toolset. The end-goal for development will include external plugin support, browser-source output in addition to legacy text output, custom components, and a scoreboard "projector" mode in addition to the stream scorebug.
 ## Download
-<a href="https://github.com/JumpShot-Interactive/TeleScore/releases/tag/v1.0.1-beta">Download</a>
+#<a href="https://github.com/JumpShot-Interactive/TeleScore/releases/latest">Download</a>
 ## Showcase
 <img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase1.gif" alt="drawing" width="600"/>
 <img src="https://github.com/JumpShot-Interactive/TeleScore/blob/main/showcase2.gif" alt="drawing" width="600"/>
@@ -38,7 +38,6 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 
 ## Tutorial
 [![Playlist](https://img.youtube.com/vi/94yoz_TAwKk/0.jpg)](https://www.youtube.com/playlist?list=PLi4lqFw_5klhtGT4aa7mkA3MjtL_7sqXA)
-[![Playlist](https://img.youtube.com/vi/kyB8p86VeMk/0.jpg)](https://www.youtube.com/watch?v=kyB8p86VeMk)
 ## Support/Discord:
 <a href="http://discord.telescore.live/">Discord</a></br>
 ## How to build
