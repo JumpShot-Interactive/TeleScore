@@ -387,10 +387,16 @@ class SettingAttr:
 class StartMenuAttr:
     NAME = 0
     ICON = 1
+    FILE = 2
 
-    templateList = [
-        {
+    templateList = {
+        "New Project": {
             NAME: "New Project",
-            ICON: "src/resources/blank.png",
+            ICON: "src/resources/blank.png"
+        },
+        "General Template": {
+            NAME: "General Template",
+            ICON: "src/resources/scoreboard.png",
+            FILE: "src/resources/premade.json"
         }
-    ]
+    }
