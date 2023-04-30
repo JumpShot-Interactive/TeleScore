@@ -46,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Setting up the toolbar
         self.toolBar.addWidget(QtWidgets.QPushButton(QIcon(resourcePath("src/resources/icon.ico")),
-         " TeleScore v1.0.1 Beta"))
+         " TeleScore v1.0.2 Beta"))
         self.toolBar.addSeparator()
         self.editModeButton = QtWidgets.QPushButton("Editor Mode")
         self.toolBar.addWidget(self.editModeButton)
@@ -74,8 +74,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.toolBar.setVisible(False)
 
-        #self.editor = Editor()
-        #self.setCentralWidget(self.editor)
         self.startMenu = StartMenu(self._newTriggered, self._openTriggered)
         self.setCentralWidget(self.startMenu)
         self._windowChanged()
@@ -195,13 +193,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     
     def _createNewDialog(self, tab):
-        dialog = TabDialog(tab, self._popOutTabClosed, self)
+        dialog = TabDialog(tab, self._popOutTabClosed, None)
         dialog.setWindowTitle(tab.objectName())
         dialog.show()
         self.dialogs.append(dialog)
 
 
     def _removeAllDialog(self):
+        if (self.editor != None):
+            self.editor.removeTabs()
         for dialog in self.dialogs:
             dialog.deleteLater()
         self.dialogs = []
@@ -226,11 +226,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def closeEvent(self, evt) -> None:
         StartFile().save()
-        if (self.editor != None):
-            if (self.editor.closingDialog()):
-                evt.accept()
-            else:
-                evt.ignore()
+        if (self.editor == None):
+            self._removeAllDialog()
+            return
+
+        if (self.editor.closingDialog()):
+            evt.accept()
+            self._removeAllDialog()
+        else:
+            evt.ignore()
 
 
     def _windowChanged(self):

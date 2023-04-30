@@ -33,7 +33,7 @@ class Editor(QMainWindow):
         self.cmdStack = QtGui.QUndoStack(self) # Command stack used for undo/redo
         self.currComp = None
         self.currLO = None
-
+        self.tabs = []
         self._initUI(project)
 
 
@@ -96,7 +96,7 @@ class Editor(QMainWindow):
 
         # This is a bit redundant. If there is a simpler way of doing this, please change it.
         self.toolBar.addWidget(QPushButton(QtGui.QIcon(resourcePath("src/resources/icon.ico")),
-         " TeleScore v1.0.1 Beta"))
+         " TeleScore v1.0.2 Beta"))
         self.toolBar.addSeparator()
         self.addTabPushButton = QPushButton("Add Tab")
         self.toolBar.addWidget(self.addTabPushButton)
@@ -201,18 +201,27 @@ class Editor(QMainWindow):
         tab = self.tabWidget.currentWidget()
         self.clearCurrComp()
 
-        dialog = TabDialog(tab, self._popOutTabClosed, self)
-        dialog.setWindowTitle(tab.objectName())
-        dialog.show()
+        newTab = TabDialog(tab, self._popOutTabClosed, None)
+        newTab.setWindowTitle(tab.objectName())
+        newTab.show()
 
         tab.setVisible(True)
         self._refreshTabButton()
+
+        self.tabs.append(newTab)
 
 
     def _popOutTabClosed(self, tab):
         self.clearCurrComp()
         self.tabWidget.addTab(tab.getTab(), tab.getTab().objectName())
         self._refreshTabButton()
+        self.tabs.remove(tab)
+
+
+    def removeTabs(self):
+        for dialog in self.tabs:
+            dialog.deleteLater()
+        self.tabs = []
 
 
     def _refreshTabButton(self):
@@ -328,7 +337,6 @@ class Editor(QMainWindow):
             match evt.key():
                 case Qt.Key.Key_S:
                     self.saveAction()
-
         evt.accept()
 
 
@@ -338,5 +346,4 @@ class Editor(QMainWindow):
             self.saveAction()
         elif (dialog.getCode() == dialog.CANCEL):
             return False
-
         return True

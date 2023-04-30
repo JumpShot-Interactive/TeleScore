@@ -13,7 +13,7 @@ DEBUG = False
 if not DEBUG:
     import src
     sys.path.append(src.CURR_PATH)
-    from gm_resources import resourcePath
+    from gm_resources import resourcePath, GMessageBox
     from window.mainwindow import MainWindow
 else:
     from gm_resources import resourcePath, GMessageBox

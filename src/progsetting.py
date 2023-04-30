@@ -40,13 +40,13 @@ class ProgSetting(object):
         return self.properties
 
 
-    def addRecentlyOpened(self, project, start=False):
+    def addRecentlyOpened(self, project):
         if (exists(project.getFileName())):
             if (project.getFileName() in self.recentlyOpened):
                 self.recentlyOpened.pop(project.getFileName())
             self.recentlyOpened[project.getFileName()] = project
             if len(self.recentlyOpened) > 10:
-                self.recentlyOpened.popitem(last=False)
+                self.recentlyOpened.popitem()
 
 
     def getRecentlyOpened(self) -> dict:

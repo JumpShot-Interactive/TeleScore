@@ -16,6 +16,7 @@ class StartMenu(QWidget):
         super().__init__(parent) # Call the inherited classes __init__ method
         self.newCallBack = newCallBack
         self.openCallBack = openCallBack
+        self.templateMap = {}
         self._initUI()
 
 
@@ -43,17 +44,16 @@ class StartMenu(QWidget):
         :param: none
         :return: none
         """
-        try:
-            raise Exception
-        except:
-            self.templateList = StartMenuAttr.templateList
-
+        self.templateList = StartMenuAttr.templateList
         self._loadTemplates()
         self._loadRecent()
 
 
     def _newTemplateClicked(self, item: QListWidgetItem):
-        self.newCallBack()
+        if (item.text() == "New Project"):
+            self.newCallBack()
+        else:
+            self.openCallBack(None, StartMenuAttr.templateList[item.text()][StartMenuAttr.FILE])
 
 
     def _openTemplateClicked(self, item: QTreeWidgetItem):
@@ -68,20 +68,20 @@ class StartMenu(QWidget):
         :param evt: resize event information
         :return: none
         """
-        width = int(self.treeWidget.width()/self.treeWidget.columnCount())
+        width = int(self.treeWidget.width() / self.treeWidget.columnCount())
 
         for i in range(self.treeWidget.columnCount()):
             self.treeWidget.header().resizeSection(i, width)
 
 
-    def _loadTemplates(self) -> None:
+    def _loadTemplates(self):
         """
         Loads the templates into the start menu
 
         :param templates: dictionary of templates
         :return: none
         """
-        for value in self.templateList:
+        for value in self.templateList.values():
             try:
                 self.listWidget.addItem(QListWidgetItem(QIcon(resourcePath(value[StartMenuAttr.ICON])),
                  value[StartMenuAttr.NAME]))
@@ -105,11 +105,9 @@ class StartMenu(QWidget):
             setting = ProgSetting()
             for proj in setting.getRecentlyOpened().values():
                 item = QTreeWidgetItem()
-                item.setTextAlignment(0, Qt.AlignmentFlag.AlignCenter)
-                item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
-                item.setTextAlignment(2, Qt.AlignmentFlag.AlignCenter)
-                item.setTextAlignment(3, Qt.AlignmentFlag.AlignCenter)
-                item.setTextAlignment(4, Qt.AlignmentFlag.AlignCenter)
+                for i in range(4):
+                    item.setTextAlignment(4, Qt.AlignmentFlag.AlignCenter)
+
                 tempProj = proj.getProperty()
 
                 item.setText(0, tempProj["Name"])
