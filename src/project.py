@@ -1,4 +1,4 @@
-from property.property import Property
+from property.property import Properties
 from attr import CompType
 from datetime import datetime
 from attr import PropInstType, PropWidgetType
@@ -30,7 +30,7 @@ class Project:
     }
 
     def __init__(self, name: str="untitled", author: str="TeleScore"):
-        self.property = Property()
+        self.property = Properties()
         self.property.appendPropHead("Project", Project.projTemplate)
         self.property.appendProps(self.projITemplate)
 
@@ -61,14 +61,14 @@ class Project:
         self.property["Date"] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         
     
-    def getProperty(self) -> Property:
+    def getProperty(self) -> Properties:
         self.property["CC"] = self.compCounter
         self.property["LC"] = self.loCounter
         self.property["Global Directory"] = self.dirName.replace("/{}", "")
         return self.property
 
     
-    def setProperty(self, prop: Property):
+    def setProperty(self, prop: Properties):
         self.property = prop
         self.compCounter = prop["CC"]
         self.loCounter = prop["LC"]

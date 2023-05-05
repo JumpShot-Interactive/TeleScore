@@ -1,22 +1,20 @@
-from attr import PropInstType
+"""
+Developed by: JumpShot Team
+Written by: riscyseven
+"""
 
-class PropInst:
+class Property:
     """
     This class is used to store the property of a component. 
     """
 
-    def __init__(self, name=None, type=None, value=None, option=None, combined=None):
+    def __init__(self, name=None, type=None, value=None, option=None, getCallback=None, setCallback=None):
         self._value = value
         self._type = type
         self._option = option
-        if (combined is not None):
-            if (PropInstType.OPTION in combined):
-                self._option = combined[PropInstType.OPTION]
-            if (PropInstType.NAME in combined):
-                self._name = combined[PropInstType.NAME]
-            self._type = combined[PropInstType.TYPE]
-            self._value = combined[PropInstType.VALUE]
         self._name = name
+        self._getCallback = getCallback
+        self._setCallback = setCallback
 
 
     def setName(self, name):
@@ -49,3 +47,6 @@ class PropInst:
 
     def getOption(self):
         return self._option
+
+
+    

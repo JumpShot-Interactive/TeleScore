@@ -3,7 +3,7 @@ Developed By: JumpShot Team
 Written by: riscyseven
 """
 
-from property.property import Property
+from property.property import Properties
 from attr import SettingAttr
 from fileio.settingfile import SettingFile
 from os.path import exists
@@ -17,12 +17,12 @@ class ProgSetting(object):
             cls.instance = super(ProgSetting, cls).__new__(cls)
         return cls.instance
 
-    properties = Property()
+    properties = Properties()
     recentlyOpened = {}
     
 
     def loadProperties(self, path: str):
-        self.properties = Property()
+        self.properties = Properties()
         self.properties.appendPropHead("General", SettingAttr.genProperty)
         try:
             settingFile = SettingFile(path, self.properties)
@@ -36,7 +36,7 @@ class ProgSetting(object):
         settingFile.save()
 
 
-    def getProperties(self) -> Property:
+    def getProperties(self) -> Properties:
         return self.properties
 
 

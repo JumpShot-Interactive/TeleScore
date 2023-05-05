@@ -8,13 +8,13 @@ from PyQt6 import uic
 
 from editor.proptab.propwidgetitem import PropWidgetItem
 from editor.proptab.proplineedit import PropLineEdit
-from property.property import Property
+from property.property import Properties
 from gm_resources import resourcePath
 
 class Settings(QDialog):
     def __init__(self, property, parent=None):
         super().__init__(parent) # Call the inherited classes __init__ method
-        self.property: Property = property
+        self.property: Properties = property
         self._properties = self.property.getPropertyDict()
         self._initUI()
         self.tempChanges = {}

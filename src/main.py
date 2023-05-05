@@ -8,7 +8,7 @@ import sys
 from PyQt6.QtWidgets import QApplication
 from traceback import format_exc
 
-DEBUG = False
+DEBUG = True
 
 if not DEBUG:
     import src

@@ -42,7 +42,6 @@ class PropWidgetItem(QTreeWidgetItem):
 
 
     def deleteWidget(self):
-        self.editWidget.deleteLater()
         self.editWidget = None
 
 

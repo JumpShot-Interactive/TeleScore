@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from property.property import Property
+from property.property import Properties
 
 class AbstractFile:
     def __init__(self) -> None:
@@ -14,7 +14,7 @@ class AbstractFile:
         return tempProp
 
 
-    def convDicttoProp(self, dict: dict, property: Property):
+    def convDicttoProp(self, dict: dict, property: Properties):
         for key, value in dict.items():
             property[key] = value
 

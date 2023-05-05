@@ -16,7 +16,7 @@ import time
 from layout.abstract_layout.freelayout import FreeLayout
 from component.basiccomp.buttoncomp import ButtonComp
 from component.element.clock import Clock
-from property.property import Property
+from property.property import Properties
 
 # Note, these tests might be seperated into different classes in the future.
 
@@ -142,7 +142,7 @@ class property_test(unittest.TestCase):
 
     def setUp(self):
         self.app = QApplication([])
-        self.property = Property()
+        self.property = Properties()
 
     def test_appendPropHead(self):
         self.assertEqual(len(self.property.getList()), 0)

@@ -3,9 +3,11 @@ Developed by: JumpShot Team
 Written by: riscyseven
 """
 
-from property.propinst.propinst import PropInst
+from property.property import Property
+from interface.propertiesinterface import PropertiesInterface
+from attr import PropInstType
 
-class Property:
+class Properties(PropertiesInterface):
     """
     This class is used to store the properties.
     """
@@ -23,17 +25,35 @@ class Property:
         self.setValue(key, value)
 
 
-    def appendPropHead(self, headName:str, prop:dict):
+    def appendPropHead(self, headName: str, protoProp: dict):
         """
         Add a property template that contains rendering information
         """
         self._dispProp[headName] = []
-        for name, propinst in prop.items():
+        for name, protoPropInst in protoProp.items():
             if (name in self._allProp):
                 continue
-            inst = PropInst(name=name, combined=propinst)
+            inst = Property(name=name)
+            self.trySettingAllProp(protoPropInst, inst)
             self._allProp[name] = inst
             self._dispProp[headName].append(inst)
+
+    
+    def trySettingAllProp(self, protoProp: dict, prop: Property):
+        """
+        Try to set all the properties in the dictionary
+        """
+        attributeDict = {
+            PropInstType.TYPE: Property.setType,
+            PropInstType.VALUE: Property.setValue,
+            PropInstType.OPTION: Property.setOption,
+            PropInstType.GET_CALLBACK: Property.setGetCallback,
+            PropInstType.SET_CALLBACK: Property.setSetCallback
+        }
+
+        for attr, value in protoProp.items():
+            if (attr in attributeDict):
+                attributeDict[attr](prop, value)
 
 
     def appendProps(self, prop: dict):
@@ -43,7 +63,7 @@ class Property:
         for name, value in prop.items():
             if (name in self._allProp):
                 continue
-            self._allProp[name] = PropInst(name=name, value=value)
+            self._allProp[name] = Property(name=name, value=value)
 
 
     def removePropHead(self, headName: str):
@@ -60,11 +80,21 @@ class Property:
                 break
 
 
-    def setValue(self, key: str, value: object) -> None:
+    def setValue(self, key: str, value: object):
         if (key in self._allProp):
             self._allProp[key].setValue(value)
         else:
-            self._allProp[key] = PropInst(name=key, value=value)
+            self._allProp[key] = Property(name=key, value=value)
+
+
+    def setPropInst(self, key: str, prop: Property):
+        self._allProp[key] = prop
+        # TODO: Refractor this
+        for head in self._dispProp.values():
+            if (key in head):
+                head.remove(key)
+                head.append(prop)
+                break
 
 
     def getValue(self, attr) -> object:
@@ -102,7 +132,7 @@ class Property:
         return self._allProp[attr].getOption()
 
 
-    def getAllPropDict(self) -> dict:
+    def getAllKeyValuePair(self) -> dict:
         """
         Returns a dictionary that contains each property name as key
         and the property value
@@ -113,7 +143,7 @@ class Property:
         return self._allProp
 
 
-    def getPropertyDict(self) -> dict:
+    def getCategorizedProperties(self) -> dict:
         """
         Returns a formatted dictionary that contains the property header, it's
         content, and the value of each property. This should be mostly used for
@@ -123,3 +153,5 @@ class Property:
         :return: Dictionary that contains formatted properties
         """
         return self._dispProp
+
+

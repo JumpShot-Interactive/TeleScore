@@ -24,6 +24,7 @@ from fileio.projectfile import ProjectFile
 from attr import CompType
 from window.tabdialog import TabDialog
 from progsetting import ProgSetting
+from property.propertyqueueui import PropertyQueueUI
 
 
 class Editor(QMainWindow):
@@ -34,6 +35,7 @@ class Editor(QMainWindow):
         self.currComp = None
         self.currLO = None
         self.tabs = []
+        self.propertyQueue: PropertyQueueUI = PropertyQueueUI()
         self._initUI(project)
 
 
@@ -82,7 +84,7 @@ class Editor(QMainWindow):
         self.comp = CompListTab(self)
         self.compDock.setWidget(self.comp)
 
-        self.prop = PropertyTab(self)
+        self.prop = PropertyTab(self.propertyQueue, self)
         self.propDock.setWidget(self.prop)
 
         self.conn = ConnMan(self.project, self)
@@ -250,7 +252,9 @@ class Editor(QMainWindow):
         if (self.currComp != comp):
             self.clearCurrComp()
             self.prop.propChanged.connect(comp.propChanged)
-            self.prop.loadPropertyFromComp(comp)
+            self.prop.loadProperties(comp.getProperty())
+            self.propertyQueue.setInterface(comp.getProperty())
+
             comp.attrChanged.connect(self.prop.externalChange)
 
             if (comp.getType() != CompType.LAYOUT):
@@ -275,6 +279,7 @@ class Editor(QMainWindow):
             self.prop.propChanged.disconnect(self.currComp.propChanged)
             self.currComp.attrChanged.disconnect(self.prop.externalChange)
             self.currComp.setFrameShape(QFrame.Shape.NoFrame)
+            self.propertyQueue.setInterface(None)
             self.currComp = None
 
 

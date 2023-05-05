@@ -32,6 +32,7 @@ class InsertCmd(QUndoCommand):
         self.pos = pos
         self.component = None
 
+
     # Override
     def redo(self) -> None:
         """
@@ -60,6 +61,7 @@ class InsertCmd(QUndoCommand):
     # Override
     def undo(self) -> None:
         self.layout.removeComponent(self.component)
+
 
     def getComp(self) -> LayoutComp:
         """

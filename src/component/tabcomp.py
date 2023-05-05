@@ -6,6 +6,7 @@ Written by: riscyseven
 from PyQt6.QtWidgets import QGridLayout
 from PyQt6.QtCore import pyqtSignal, QSize, Qt
 from PyQt6.QtGui import QResizeEvent, QMouseEvent
+from PyQt6.QtWidgets import QMenu
 
 from abstract.abstractcomp import AbstractComp
 from layout.ctrllayout import CtrlLayout
@@ -146,3 +147,15 @@ class TabComp(AbstractComp):
 
     def mousePressEvent(self, evt: QMouseEvent):
         self.LOClicked.emit(self)
+
+
+    def contextMenuEvent(self, a0) -> None:
+        super().contextMenuEvent(a0)
+
+        menu = QMenu(self)
+        if (self.parent().isFullScreen()):
+            menu.addAction("Exit Full Screen", self.parent().showNormal)
+        else:
+            menu.addAction("Full Screen", self.parent().showFullScreen)
+
+        menu.exec(a0.globalPos())

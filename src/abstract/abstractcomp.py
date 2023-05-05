@@ -8,7 +8,7 @@ from PyQt6.QtCore import pyqtSignal
 from abc import ABC, abstractmethod
 
 from gm_resources import GMessageBox
-from property.property import Property
+from property.property import Properties
 from attr import CompPropTemplate, CompType
 from project import Project
 
@@ -27,14 +27,16 @@ class AbstractComp(ABC, QFrame, metaclass=Meta):
 
     def __init__(self, project: Project, objectName: str, type: CompType, parent=None):
         super().__init__(parent)
-        self._properties = Property()
+        self._properties = Properties()
         self._project = project
         self._type = type
+        
         self._properties.appendPropHead("General Properties", CompPropTemplate.genProperty)
 
         self.setObjectName(objectName)
 
-    def getProperty(self) -> Property:
+
+    def getProperty(self) -> Properties:
         """
         Method that returns how the property tab should
         be setup for this instance of a button
@@ -42,12 +44,14 @@ class AbstractComp(ABC, QFrame, metaclass=Meta):
         :param: none
         :return: property object
         """
-        self._properties["Component Name"] = self.objectName()
-
-        self._derPropRequested()
         return self._properties
 
-    def propChanged(self):
+
+    def _getCompNameCallback(self) -> str:
+        self._properties["Component Name"] = self.objectName()
+
+
+    def _setCompNameCallback(self, name: str):
         oldName = self.objectName()
         newName = self._properties["Component Name"]
         if (oldName != newName and len(newName) > 0):
@@ -65,8 +69,6 @@ class AbstractComp(ABC, QFrame, metaclass=Meta):
                 msgBox.exec()
                 self._properties["Component Name"] = oldName
             self.attrChanged.emit()
-    
-        self._derPropChanged()
 
 
     def getType(self) -> CompType:
@@ -92,23 +94,5 @@ class AbstractComp(ABC, QFrame, metaclass=Meta):
 
         :param: none
         :return: none
-        """
-        pass
-
-
-    @abstractmethod
-    def _derPropRequested(self):
-        """
-        Called when the user modifies any attributes inside the property tab
-        :param: none
-        :return: none
-        """
-        pass
-
-
-    @abstractmethod
-    def _derPropChanged(self):
-        """
-        Reload attributes 
         """
         pass

@@ -11,7 +11,6 @@ from PyQt6.QtCore import Qt
 from gm_resources import resourcePath
 
 class TabDialog(QDialog):
-
     def __init__(self, tab, callBack, parent=None):
         super().__init__(parent)
         uic.loadUi(resourcePath("src/window/ui/tabdialog.ui"), self) # Load the .ui file
@@ -32,5 +31,3 @@ class TabDialog(QDialog):
     def closeEvent(self, event):
         self._callBack(self)
         event.accept()
-        
-
