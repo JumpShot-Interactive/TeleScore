@@ -13,7 +13,6 @@ from layout.ctrllayout import CtrlLayout
 from attr import PropInstType, PropWidgetType, CompType
 
 class TabComp(AbstractComp):
-    attrChanged = pyqtSignal()
     LOClicked = pyqtSignal(object)
 
     loProperty = {
@@ -44,12 +43,12 @@ class TabComp(AbstractComp):
     }
 
 
-    def __init__(self, project, objectName, remCallBack=None, dropCallBack=None, parent=None):
+    def __init__(self, project, objectName, editorInterface, parent=None):
         super().__init__(project, objectName, CompType.LAYOUT, parent)
         self.layout = QGridLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
 
-        self.ctrl = CtrlLayout(project, QSize(800, 600), remCallBack, dropCallBack, self)
+        self.ctrl = CtrlLayout(project, QSize(800, 600), editorInterface, self)
         self.layout.addWidget(self.ctrl, 0, Qt.AlignmentFlag.AlignCenter)
         self.ctrl.setStyleSheet("background-color: #3E5768;")
         self.aspectRatio = True

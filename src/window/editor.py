@@ -25,6 +25,7 @@ from attr import CompType
 from window.tabdialog import TabDialog
 from progsetting import ProgSetting
 from property.propertyqueueui import PropertyQueueUI
+from interface.editorinterface import EditorInterface
 
 
 class Editor(QMainWindow):
@@ -35,7 +36,11 @@ class Editor(QMainWindow):
         self.currComp = None
         self.currLO = None
         self.tabs = []
-        self.propertyQueue: PropertyQueueUI = PropertyQueueUI()
+        self.propertyQueue: PropertyQueueUI = PropertyQueueUI(self.cmdStack)
+        self.editorInterface = EditorInterface(self._remCallBack,
+                                               self._dropSlot,
+                                               self._compMovedCallBack,
+                                               self._compResizedCallBack)
         self._initUI(project)
 
 
@@ -70,7 +75,8 @@ class Editor(QMainWindow):
 
         if project is None:
             self.project = Project()
-            tab = InsertLOCmd(self.project, self.tabWidget, self._remCallBack, self._dropSlot)
+            tab = InsertLOCmd(self.project, self.tabWidget,
+                               self.editorInterface)
             self.cmdStack.push(tab)
             tab.getLayout().LOClicked.connect(self._compClicked)
         else:
@@ -129,6 +135,38 @@ class Editor(QMainWindow):
         self._refreshTabButton()
 
 
+    # ----------- Callbacks -----------
+
+    def _renameCallBack(self, fromName, toName):
+        for i in range(self.tabWidget.count()):
+            if (self.tabWidget.tabText(i) == fromName):
+                self.tabWidget.setTabText(i, toName)
+
+    
+    def _insertCallBack(self, component: AbstractComp):
+        component.compClicked.connect(self._compClicked)
+
+
+    def _remCallBack(self, component: AbstractComp):
+        print(component)
+        if (self.currComp == component):
+            self.clearCurrComp()
+        component.compClicked.disconnect(self._compClicked)
+
+
+    def _compMovedCallBack(self, oldProp: list, newProp: list, comp: AbstractComp):
+        self.propertyQueue.setInterface(comp.getProperty())
+        self.propertyQueue.append(oldProp, newProp)
+
+
+    def _compResizedCallBack(self, oldProp: list, newProp: list, comp: AbstractComp):
+        self.propertyQueue.setInterface(comp.getProperty())
+        self.propertyQueue.append(oldProp, newProp)
+
+
+    # ------------- End of Callbacks -------------
+
+
     def getProject(self) -> Project:
         """
         Returns the project.
@@ -173,7 +211,7 @@ class Editor(QMainWindow):
 
     @pyqtSlot(bool)
     def _addTab(self, clicked):
-        cmd = InsertLOCmd(self.project, self.tabWidget, self._remCallBack, self._dropSlot)
+        cmd = InsertLOCmd(self.project, self.tabWidget, self._remCallback, self._dropSlot)
         self.cmdStack.push(cmd)
         
         self._refreshTabButton()
@@ -183,7 +221,9 @@ class Editor(QMainWindow):
 
     @pyqtSlot(bool)
     def _removeTab(self, clicked):
-        msg = GMessageBox("Are you sure?", "Are you sure you want to remove this tab?", "AskYesNo", self)
+        msg = GMessageBox("Are you sure?",
+                           "Are you sure you want to remove this tab?",
+                             "AskYesNo", self)
         if (msg.exec() == QMessageBox.StandardButton.Yes):
             self.clearCurrComp()
             self.clearActiveTab()
@@ -192,11 +232,6 @@ class Editor(QMainWindow):
 
             self._refreshTabButton()
 
-
-    def _renameCallBack(self, fromName, toName):
-        for i in range(self.tabWidget.count()):
-            if (self.tabWidget.tabText(i) == fromName):
-                self.tabWidget.setTabText(i, toName)
 
 
     def _popOutTab(self, clicked):
@@ -251,7 +286,7 @@ class Editor(QMainWindow):
         """
         if (self.currComp != comp):
             self.clearCurrComp()
-            self.prop.propChanged.connect(comp.propChanged)
+            self.prop.propChanged.connect(comp.attrChanged)
             self.prop.loadProperties(comp.getProperty())
             self.propertyQueue.setInterface(comp.getProperty())
 
@@ -276,7 +311,7 @@ class Editor(QMainWindow):
         if (self.currComp != None):
             self.prop.clearTree()
             self.conn.clearTable()
-            self.prop.propChanged.disconnect(self.currComp.propChanged)
+            self.prop.propChanged.disconnect(self.currComp.attrChanged)
             self.currComp.attrChanged.disconnect(self.prop.externalChange)
             self.currComp.setFrameShape(QFrame.Shape.NoFrame)
             self.propertyQueue.setInterface(None)
@@ -301,16 +336,8 @@ class Editor(QMainWindow):
         # I could put this inside the layout but more unnecessary code for layout
         type = evt.mimeData().data("application/x-comp").data().decode()
         point = QPoint(int(evt.position().x()), int(evt.position().y()))
-        insert = InsertCmd(self.project, layout, type, point)
+        insert = InsertCmd(self.project, layout, type, point, self._insertCallBack)
         self.cmdStack.push(insert)
-
-        insert.getComp().compClicked.connect(self._compClicked)
-
-
-    def _remCallBack(self, component: AbstractComp):
-        if (self.currComp == component):
-            self.clearCurrComp()
-        component.compClicked.disconnect(self._compClicked)
 
 
     def saveAction(self):
@@ -323,7 +350,8 @@ class Editor(QMainWindow):
 
 
     def saveAsAction(self):
-        file = QFileDialog.getSaveFileName(self, "Save Layout File As", ".", "JSON File (*.json)")
+        file = QFileDialog.getSaveFileName(self, "Save Layout File As",
+                                            ".", "JSON File (*.json)")
 
         if (file[0] != '' and file[1] != ''):
             self.project.setFileName(file[0])
@@ -334,10 +362,10 @@ class Editor(QMainWindow):
 
     # Override
     def keyPressEvent(self, evt: QtGui.QKeyEvent) -> None:
-        '''if (evt.modifiers() & Qt.KeyboardModifier.ControlModifier):
+        if (evt.modifiers() & Qt.KeyboardModifier.ControlModifier):
             match evt.key():
                 case Qt.Key.Key_Z:
-                    self.cmdStack.undo()'''
+                    self.cmdStack.undo()
         if (evt.modifiers() & Qt.KeyboardModifier.ControlModifier):
             match evt.key():
                 case Qt.Key.Key_S:

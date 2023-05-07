@@ -3,22 +3,22 @@ Developed By: JumpShot Team
 Written by: riscyseven
 """
 
-from property.property import Properties
+from property.properties import Properties
 from attr import SettingAttr
 from fileio.settingfile import SettingFile
 from os.path import exists
 
 class ProgSetting(object):
     """
-     
+    This class is the singleton class that holds the program's settings.
     """
+    properties = Properties()
+    recentlyOpened = {}
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(ProgSetting, cls).__new__(cls)
         return cls.instance
-
-    properties = Properties()
-    recentlyOpened = {}
     
 
     def loadProperties(self, path: str):

@@ -20,7 +20,7 @@ class PropInstType:
     OPTION = 2
     NAME = 3
     GET_CALLBACK = 4
-    SET_CALLBACK = 5
+    UPDATE_CALLBACK = 5
 
 class PropWidgetType:
     TEXTEDIT = 0

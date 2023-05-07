@@ -8,7 +8,7 @@ from PyQt6 import uic
 
 from editor.proptab.propwidgetitem import PropWidgetItem
 from editor.proptab.proplineedit import PropLineEdit
-from property.property import Properties
+from property.properties import Properties
 from gm_resources import resourcePath
 
 class Settings(QDialog):

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from property.property import Properties
+from property.properties import Properties
 
 class AbstractFile:
     def __init__(self) -> None:

@@ -1,16 +1,14 @@
 from queue import Queue
 
 from property.property.property import Property
-from interface.propertiesinterface import PropertyInterface
-
 
 class PropertyQueue:
     def __init__(self) -> None:
         self._queue = Queue()
-        self._interface: PropertyInterface = None
+        self._interface = None
 
 
-    def setInterface(self, interface: PropertyInterface):
+    def setInterface(self, interface):
         self._interface = interface
 
 

@@ -3,11 +3,10 @@ Developed by: JumpShot Team
 Written by: riscyseven
 """
 
-from property.property import Property
-from interface.propertiesinterface import PropertiesInterface
+from property.property.property import Property
 from attr import PropInstType
 
-class Properties(PropertiesInterface):
+class Properties:
     """
     This class is used to store the properties.
     """
@@ -47,8 +46,8 @@ class Properties(PropertiesInterface):
             PropInstType.TYPE: Property.setType,
             PropInstType.VALUE: Property.setValue,
             PropInstType.OPTION: Property.setOption,
-            PropInstType.GET_CALLBACK: Property.setGetCallback,
-            PropInstType.SET_CALLBACK: Property.setSetCallback
+            PropInstType.GET_CALLBACK: Property.setGetMethod,
+            PropInstType.UPDATE_CALLBACK: Property.setUpdateMethod
         }
 
         for attr, value in protoProp.items():
@@ -89,12 +88,20 @@ class Properties(PropertiesInterface):
 
     def setPropInst(self, key: str, prop: Property):
         self._allProp[key] = prop
-        # TODO: Refractor this
+
+        # TODO: This is a very inefficient way of doing this
         for head in self._dispProp.values():
-            if (key in head):
-                head.remove(key)
-                head.append(prop)
-                break
+            for inst in head:
+                if (inst.getName() == key):
+                    index = head.index(inst)
+                    head[index] = prop
+                    return
+
+
+    def getPropInst(self, key: str) -> Property:
+        if (key in self._allProp):
+            return self._allProp[key]
+        return None
 
 
     def getValue(self, attr) -> object:
@@ -153,5 +160,3 @@ class Properties(PropertiesInterface):
         :return: Dictionary that contains formatted properties
         """
         return self._dispProp
-
-

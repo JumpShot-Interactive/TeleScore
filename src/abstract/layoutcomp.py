@@ -13,7 +13,7 @@ from gm_resources import resourcePath
 from component.connection import Connection
 from abstract.abstractcomp import AbstractComp
 
-from abc import abstractmethod
+from property.property.property import Property
 
 class LayoutComp(AbstractComp):
     """
@@ -26,7 +26,7 @@ class LayoutComp(AbstractComp):
     geoProperty = {
         "X": {
             PropInstType.TYPE: PropWidgetType.NUMEDIT,
-            PropInstType.VALUE: 1
+            PropInstType.VALUE: 1,
         },
         "Y": {
             PropInstType.TYPE: PropWidgetType.NUMEDIT,
@@ -34,7 +34,8 @@ class LayoutComp(AbstractComp):
         },
         "Width": {
             PropInstType.TYPE: PropWidgetType.NUMEDIT,
-            PropInstType.VALUE: 0
+            PropInstType.VALUE: 0,
+
         },
         "Height": {
             PropInstType.TYPE: PropWidgetType.NUMEDIT,
@@ -77,7 +78,6 @@ class LayoutComp(AbstractComp):
         self._moveUp.triggered.connect(self._moveUpTriggered)
         self._moveDown.triggered.connect(self._moveDownTriggered)
 
-        self._properties.appendPropHead("Geometry Properties", self.geoProperty)
         self._properties["Lock"] = False
         self._firstTimeProp()
 
@@ -87,6 +87,41 @@ class LayoutComp(AbstractComp):
 
         self._connection.appendCallBack("Set Visible", self._setVisible)
         self._connection.appendCallBack("Set Invisible", self._setInvisible)
+
+
+    def _firstTimeProp(self):
+        self.geoProperty["X"][PropInstType.UPDATE_CALLBACK] = self.setGeoLoc
+        self.geoProperty["Y"][PropInstType.UPDATE_CALLBACK] = self.setGeoLoc
+        self.geoProperty["Width"][PropInstType.UPDATE_CALLBACK] = self.setGeoSize
+        self.geoProperty["Height"][PropInstType.UPDATE_CALLBACK] = self.setGeoSize
+        self.geoProperty["Width"][PropInstType.GET_CALLBACK] = self.getGeoSize
+        self.geoProperty["Height"][PropInstType.GET_CALLBACK] = self.getGeoSize
+        
+        self._properties.appendPropHead("Geometry Properties", self.geoProperty)
+
+    # --------- Callback Functions --------- #
+
+    def setGeoLoc(self, params):
+        self.move(self._properties["X"], self._properties["Y"])
+        self.setModLoc(self._layout.getProjSize(), self._layout.getCurrSize())
+
+
+    def setGeoSize(self, params):
+        self.setFixedSize(self._properties["Width"], self._properties["Height"])
+        self.origSize = QSize(self._properties["Width"], self._properties["Height"])
+        self.setModSize(self._layout.getProjSize(), self._layout.getCurrSize())
+
+
+    def getGeoSize(self):
+        self._properties["Width"] = self.origSize.width()
+        self._properties["Height"] = self.origSize.height()
+
+
+    def setLock(self):
+        if self._properties["Lock"]:
+            self._lockAction.setText("Unlock")
+
+    # --------- End of Callback Functions --------- #
 
 
     def getConnection(self) -> Connection:
@@ -112,28 +147,6 @@ class LayoutComp(AbstractComp):
     
     def _moveDownTriggered(self):
         self._layout.moveDown(self)
-
-
-    # Override
-    def _derPropRequested(self):
-        self._properties["Width"] = self.origSize.width()
-        self._properties["Height"] = self.origSize.height()
-        self._reloadProperty()
-
-
-    # Override
-    def _derPropChanged(self):
-        self.move(self._properties["X"], self._properties["Y"])
-        self.setFixedSize(self._properties["Width"], self._properties["Height"])
-        self.origSize = QSize(self._properties["Width"], self._properties["Height"])
-
-        self.setModLoc(self._layout.getProjSize(), self._layout.getCurrSize())
-        self.setModSize(self._layout.getProjSize(), self._layout.getCurrSize())
-        self._reconfProperty()
-        #self.setToolTip(self.objectName())
-        
-        if self._properties["Lock"]:
-            self._lockAction.setText("Unlock")
 
 
     # Override
@@ -278,27 +291,65 @@ class LayoutComp(AbstractComp):
                         self.setCursor(Qt.CursorShape.SizeAllCursor)
         evt.accept()
 
+
     # Override
     def mouseReleaseEvent(self, evt: QMouseEvent) -> None:
         self.setCursor(Qt.CursorShape.ArrowCursor)
         self._mousePressed = False
-        if (self._project.editMode() and not self._properties["Lock"]):
-            self.setModLoc(self._layout.getCurrSize(), self._layout.getCurrSize())
-            self._properties["X"] = round(self._layout.getProjSize().width() * self.xratio)
-            self._properties["Y"] = round(self._layout.getProjSize().height() * self.yratio)
 
+        if (self._project.editMode() and not self._properties["Lock"]):
+            self.compMovedByMouse()
             if (self._mouseResized):
-                self.setSizeRatio(self._layout.getCurrSize())
-                self.setLocRatio(self._layout.getCurrSize())
-                self._properties["Width"] = round(self._layout.getProjSize().width() * self.wratio)
-                self._properties["Height"] = round(self._layout.getProjSize().height() * self.hratio)
-                self.origSize = QSize(self._properties["Width"], self._properties["Height"])
-                self._mouseResized = 0
-            
+                self.compResizedByMouse()
             self.attrChanged.emit()
 
         if (evt is not None):
             evt.accept()
+
+
+    def compMovedByMouse(self):
+        self.setModLoc(self._layout.getCurrSize(), self._layout.getCurrSize())
+        xInst = round(self._layout.getProjSize().width() * self.xratio)
+        yInst = round(self._layout.getProjSize().height() * self.yratio)
+
+        xPropInst = self._properties.getPropInst("X")
+        yPropInst = self._properties.getPropInst("Y")
+
+        newXPropInst = Property()
+        newYPropInst = Property()
+        newXPropInst.copy(xPropInst)
+        newYPropInst.copy(yPropInst)
+        newXPropInst.setValue(xInst)
+        newYPropInst.setValue(yInst)
+
+        self._layout.getEditorInterface().callCompMoveCallBack([xPropInst, yPropInst],
+                                                                [newXPropInst, newYPropInst],
+                                                                self)
+        
+    
+    def compResizedByMouse(self):
+        self.setSizeRatio(self._layout.getCurrSize())
+        self.setLocRatio(self._layout.getCurrSize())
+
+        widthInst = round(self._layout.getProjSize().width() * self.wratio)
+        heightInst = round(self._layout.getProjSize().height() * self.hratio)
+        widthPropInst = self._properties.getPropInst("Width")
+        heightPropInst = self._properties.getPropInst("Height")
+
+        newWidthPropInst = Property()
+        newHeightPropInst = Property()
+        newWidthPropInst.copy(widthPropInst)
+        newHeightPropInst.copy(heightPropInst)
+        newWidthPropInst.setValue(widthInst)
+        newHeightPropInst.setValue(heightInst)
+
+        self._layout.getEditorInterface().callCompResizeCallBack([widthPropInst, heightPropInst],
+                                                                    [newWidthPropInst, newHeightPropInst],
+                                                                    self)
+        
+        self.origSize = QSize(self._properties["Width"], self._properties["Height"])
+        self._mouseResized = 0
+            
 
 
     def cornerResizeCheck(self, pos) -> bool:
@@ -335,31 +386,3 @@ class LayoutComp(AbstractComp):
             return super().eventFilter(obj, evt)
 
         return False
-
-
-    @abstractmethod
-    def _reconfProperty(self):
-        """
-        Called when the user modifies any attributes inside the property tab
-        :param: none
-        :return: none
-        """
-        pass
-
-
-    @abstractmethod
-    def _reloadProperty(self):
-        """
-        Reload attributes 
-        """
-        pass
-
-
-    @abstractmethod
-    def _reconfProperty(self):
-        """
-        Called when the user modifies any attributes inside the property tab
-        :param: none
-        :return: none
-        """
-        pass

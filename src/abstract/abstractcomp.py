@@ -8,9 +8,11 @@ from PyQt6.QtCore import pyqtSignal
 from abc import ABC, abstractmethod
 
 from gm_resources import GMessageBox
-from property.property import Properties
-from attr import CompPropTemplate, CompType
+from property.properties import Properties
+from attr import CompPropTemplate, CompType, PropInstType
 from project import Project
+
+from copy import deepcopy
 
 class Meta(type(ABC), type(QFrame)): pass
 
@@ -31,7 +33,11 @@ class AbstractComp(ABC, QFrame, metaclass=Meta):
         self._project = project
         self._type = type
         
-        self._properties.appendPropHead("General Properties", CompPropTemplate.genProperty)
+        propInst = deepcopy(CompPropTemplate.genProperty)
+        propInst["Component Name"][PropInstType.GET_CALLBACK] = self._getCompNameCallback
+        propInst["Component Name"][PropInstType.UPDATE_CALLBACK] = self._setCompNameCallback
+
+        self._properties.appendPropHead("General Properties", propInst)
 
         self.setObjectName(objectName)
 
@@ -51,9 +57,8 @@ class AbstractComp(ABC, QFrame, metaclass=Meta):
         self._properties["Component Name"] = self.objectName()
 
 
-    def _setCompNameCallback(self, name: str):
+    def _setCompNameCallback(self, newName: str):
         oldName = self.objectName()
-        newName = self._properties["Component Name"]
         if (oldName != newName and len(newName) > 0):
             if (self._type == CompType.LAYOUT and
              not self._project.existsLO(newName)):

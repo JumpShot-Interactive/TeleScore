@@ -60,21 +60,28 @@ class PropertyTab(QWidget):
 
 
     def _parseProperties(self):
-        for i, headName in enumerate(self._properties.getCategorizedProperties()):
-            header = PropWidgetHead(headName, self.treeWidget)
-            # This sets the header to span all the columns
-            self.treeWidget.setFirstColumnSpanned(i, QModelIndex(), True)
+        categorized = self._properties.getCategorizedProperties()
 
-            for prop in self._properties[headName]:           
-                tabItem = PropWidgetItem(header, prop, self._propItemChanged, self.treeWidget)
+        for i, headName in enumerate(categorized):
+            header = PropWidgetHead(headName, self.treeWidget)
+            self.treeWidget.setFirstColumnSpanned(i, QModelIndex(), True) # Set the header to span all the columns
+
+            for prop in categorized[headName]:
+                method = prop.getGetMethod()
+                if method is not None:
+                    method()
+                tabItem = PropWidgetItem(header, prop, self._propInstChanged, self.treeWidget)
                 self.treeWidget.setItemWidget(tabItem, 1, tabItem.getWidget())
             header.setExpanded(True) # Making sure the tabs are expanded
 
 
-    def _propInstChanged(self, prop, value):
-        newProp = Property(prop.getName(), prop.getType(),
-                            value, prop.getOption(), prop.getCallback())
-        self._propertyQueue.append(prop, newProp)
+    def _propInstChanged(self, item, value):
+        prop = item.getProp()
+        newProp = Property()
+        newProp.copy(prop)
+        newProp.setValue(value)
+        self._propertyQueue.append([prop], [newProp])
+        item.setProp(newProp)
 
 
     def externalChange(self):

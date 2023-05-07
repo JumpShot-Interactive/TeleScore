@@ -1,4 +1,4 @@
-from property.property import Properties
+from property.properties import Properties
 from attr import CompType
 from datetime import datetime
 from attr import PropInstType, PropWidgetType

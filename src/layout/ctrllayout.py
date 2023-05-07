@@ -11,6 +11,8 @@ from PyQt6.QtGui import QPaintEvent, QPixmap, QPainter
 from layout.abstract_layout.freelayout import FreeLayout
 from abstract.layoutcomp import LayoutComp
 
+from interface.editorinterface import EditorInterface
+
 
 class CtrlLayout(QFrame):
     """
@@ -18,11 +20,11 @@ class CtrlLayout(QFrame):
     """
     actiUpdate = pyqtSignal()
 
-    def __init__(self, project=None, projSize=QSize(800, 600), remCallBack=None, dropCallBack=None, parent=None):
+    def __init__(self, project=None, projSize=QSize(800, 600),
+                    editorInterface: EditorInterface=None, parent=None):
         super().__init__(parent)
         self._actualLayout = FreeLayout(projSize)
-        self._remCallBack = remCallBack
-        self._dropCallBack = dropCallBack
+        self._editorInterface = editorInterface
         self._backIMG = None
         self._projSize = None
         self._project = project
@@ -32,19 +34,10 @@ class CtrlLayout(QFrame):
         self.setAcceptDrops(True)
 
 
-    def setRemoveCallBack(self, callback):
-        self._remCallBack = callback
-
-    
-    def setDropCallBack(self, callback):
-        self._dropCallBack = callback
-
-
     def setSize(self, size: QSize):
         if (self._projSize != size):
             for comp in self._actualLayout.getLOWidgets():
                 comp.initRatio(size, size)
-
         self._projSize = size
 
 
@@ -85,8 +78,9 @@ class CtrlLayout(QFrame):
         if (self._project != None):
             self._project.removeComp(comp)
         self._actualLayout.removeWidget(comp)
-        if (self._remCallBack != None):
-            self._remCallBack(comp)
+        if (self._editorInterface != None):
+            self._editorInterface.callRemCallBack(comp)
+
         comp.setParent(None)
         comp.deleteLater()
         comp = None
@@ -111,7 +105,7 @@ class CtrlLayout(QFrame):
 
 
     def dropEvent(self, evt):
-        self._dropCallBack(evt, self)
+        self._editorInterface.callDropCallBack(evt, self)
 
 
     def getProjSize(self) -> QSize:
@@ -158,3 +152,7 @@ class CtrlLayout(QFrame):
     def moveDown(self, comp: LayoutComp):
         self._actualLayout.moveDown(comp)
         self.actiUpdate.emit()
+
+
+    def getEditorInterface(self) -> EditorInterface:
+        return self._editorInterface

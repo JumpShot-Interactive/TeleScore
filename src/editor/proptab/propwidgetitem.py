@@ -50,36 +50,44 @@ class PropWidgetItem(QTreeWidgetItem):
 
 
     def _spinBoxChanged(self, value: int):
-        self.callBack(self._prop, value)
+        self.callBack(self, value)
 
 
     def _lineEditChanged(self, value: str):
-        self.callBack(self._prop, value)
+        self.callBack(self, value)
 
 
     def _fontEditChanged(self, font: QFont):
-        self.callBack(self._prop, font.family())
+        self.callBack(self, font.family())
 
 
     def _checkBoxChanged(self, checked: int):
-        self.callBack(self._prop, checked)
+        self.callBack(self, checked)
 
     
     def _fileSctClicked(self, fileName):
-        self.callBack(self._prop, fileName)
+        self.callBack(self, fileName)
 
 
     def _hotKeyFinished(self, hotKey):
-        self.callBack(self._prop, hotKey)
+        self.callBack(self, hotKey)
 
 
     def _createColorDialog(self):
-        color = QColorDialog(QColor(self._prop.getValue()), self._treeWidget)
+        color = QColorDialog(QColor(self.getValue()), self._treeWidget)
         if (color.exec() == QColorDialog.DialogCode.Accepted):
-            self.callBack(self._prop, color.currentColor().name())
+            self.callBack(self, color.currentColor().name())
             self.editWidget.setStyleSheet(f"background-color:{color.currentColor().name()}")
         color.deleteLater()
 
     
     def _comboBoxChanged(self, index: int):
-        self.callBack(self._prop, index)
+        self.callBack(self, index)
+
+
+    def setProp(self, prop):
+        self._prop = prop
+
+
+    def getProp(self):
+        return self._prop

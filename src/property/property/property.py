@@ -8,13 +8,22 @@ class Property:
     This class is used to store the property of a component. 
     """
 
-    def __init__(self, name=None, type=None, value=None, option=None, getCallback=None, setCallback=None):
+    def __init__(self, name=None, type=None, value=None, option=None, updateMethod=None, getMethod=None):
         self._value = value
         self._type = type
         self._option = option
         self._name = name
-        self._getCallback = getCallback
-        self._setCallback = setCallback
+        self._updateMethod = updateMethod
+        self._getMethod = getMethod
+
+
+    def copy(self, prop):
+        self._value = prop.getValue()
+        self._type = prop.getType()
+        self._option = prop.getOption()
+        self._name = prop.getName()
+        self._updateMethod = prop.getUpdateMethod()
+        self._getMethod = prop.getGetMethod()
 
 
     def setName(self, name):
@@ -49,4 +58,27 @@ class Property:
         return self._option
 
 
+    def setUpdateMethod(self, method):
+        self._updateMethod = method
+
     
+    def setGetMethod(self, method):
+        self._getMethod = method
+
+
+    def getUpdateMethod(self):
+        """
+        Returns the update method of the property.
+
+        CHECK FOR NONE BEFORE CALLING THIS METHOD.
+        """
+        return self._updateMethod
+    
+
+    def getGetMethod(self):
+        """
+        Returns the get method of the property.
+
+        CHECK FOR NONE BEFORE CALLING THIS METHOD.
+        """
+        return self._getMethod

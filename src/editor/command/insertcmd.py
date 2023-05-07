@@ -18,7 +18,7 @@ class InsertCmd(QUndoCommand):
     to the layout
     """
 
-    def __init__(self, project: Project, layout: CtrlLayout, type: str, pos: QPoint, parent=None):
+    def __init__(self, project: Project, layout: CtrlLayout, type: str, pos: QPoint, insertCallback, parent=None):
         """
         :param layout: Layout
         :param type: Component type (Ex. Clock)
@@ -31,6 +31,7 @@ class InsertCmd(QUndoCommand):
         self.type = type
         self.pos = pos
         self.component = None
+        self._insertCallBack = insertCallback
 
 
     # Override
@@ -56,6 +57,8 @@ class InsertCmd(QUndoCommand):
             if (self.component.getType() == CompType.DISPLAY):
                 self.component.setFileDir(self._project.getDefaultFileDir())
             self.component.setVisible(True)
+
+        self._insertCallBack(self.component)
 
 
     # Override

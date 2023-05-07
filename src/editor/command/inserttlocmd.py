@@ -14,7 +14,7 @@ class InsertLOCmd(QUndoCommand):
     to the layout
     """
 
-    def __init__(self, project, tabWidget: QTabWidget, remCallBack, dropCallBack):
+    def __init__(self, project, tabWidget: QTabWidget, editorInterface):
         """
         :param layout: Layout
         :param type: Component type (Ex. Clock)
@@ -23,8 +23,7 @@ class InsertLOCmd(QUndoCommand):
         """
         super().__init__()
         self.tabWidget = tabWidget
-        self.remCallBack = remCallBack
-        self.dropCallBack = dropCallBack
+        self._editorInterface = editorInterface
         self.project = project
         self.tab = None
 
@@ -43,7 +42,7 @@ class InsertLOCmd(QUndoCommand):
         while (self.project.existsLO(name)):
             name = f"Layout {self.project.incLOCounter()}"
         
-        self.tab = TabComp(self.project, name, self.remCallBack, self.dropCallBack, self.tabWidget)
+        self.tab = TabComp(self.project, name, self._editorInterface, self.tabWidget)
         self.tabWidget.addTab(self.tab, name)
         self.project.addLO(name, self.tab)
 

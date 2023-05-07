@@ -24,12 +24,15 @@ class DeleteCmd(QUndoCommand):
         :param name: Object name
         """
         super().__init__(parent)
+        self._layout = layout
+        self._component = component
         
 
     # Override
     def redo(self) -> None:
-        pass
+        self._layout.removeComponent(self._component)
 
     # Override
     def undo(self) -> None:
-        pass
+        self._layout.addComponent(self._component)
+        self._component.setVisible(True)
