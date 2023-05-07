@@ -148,7 +148,6 @@ class Editor(QMainWindow):
 
 
     def _remCallBack(self, component: AbstractComp):
-        print(component)
         if (self.currComp == component):
             self.clearCurrComp()
         component.compClicked.disconnect(self._compClicked)
