@@ -47,4 +47,4 @@ TeleScore is currently undergoing a full rewrite to fully utilize the flexible P
 3. Using pip, install the dependencies by using "pip install -r requirements.txt"
 4. If no errors are shown, use "python src/main.py" to build the software
 ## JumpShot Team
-JumpShot team is composed of: riscyseven, TheLittleDoctor, Fisk31, controldelta, SPCcleveland9035
+JumpShot team is composed of: riscyseven, TheLittleDoctor, Fisk31, controldelta, SPCcleveland9035, Glenn
