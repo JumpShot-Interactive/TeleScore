@@ -27,7 +27,8 @@ if sys.platform == "win32":
      "include_files": src_files,
       "excludes": ["tkinter", "numpy", "pydoc_data", "distutils", "setuptools"],
       "optimize": 2,
-      "replace_paths": convPytoExe()
+      "replace_paths": convPytoExe(),
+        "include_msvcr": True,
       }
 
 
