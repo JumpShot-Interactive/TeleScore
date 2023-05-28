@@ -52,8 +52,8 @@ class InsertCmd(QUndoCommand):
          name, self.layout)
 
         if (self.component != None):
-            self.component.move(self.pos)
-            self.layout.addComponent(self.component)
+            #self.component.move(self.pos)
+            self.layout.addComponent(self.component, self.pos)
             if (self.component.getType() == CompType.DISPLAY):
                 self.component.setFileDir(self._project.getDefaultFileDir())
             self.component.setVisible(True)

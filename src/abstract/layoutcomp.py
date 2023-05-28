@@ -184,7 +184,6 @@ class LayoutComp(AbstractComp):
         self.origSize = self.size()
         self.setLocRatio(currSize)
         self.setSizeRatio(origSize)
-        
         self.setModSize(origSize, currSize)
 
 
@@ -196,7 +195,6 @@ class LayoutComp(AbstractComp):
 
     def setModLoc(self, origSize: QSize, currSize: QSize):
         self.setLocRatio(origSize)
-
         self.move(round(currSize.width() * self.xratio), round(currSize.height() * self.yratio))
 
 

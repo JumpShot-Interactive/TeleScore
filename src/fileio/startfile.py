@@ -20,7 +20,7 @@ class StartFile(AbstractFile):
         setting = ProgSetting()
 
         for project in setting.getRecentlyOpened().values():
-            fileDict.append(self.convProptoDict(project.getProperty().getAllPropDict()))
+            fileDict.append(self.convProptoDict(project.getProperty().getAllKeyValuePair()))
         jsonDict["1"] = fileDict
     
         try:

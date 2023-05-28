@@ -57,14 +57,14 @@ class CtrlLayout(QFrame):
             comp.parentResized(size)
 
 
-
-    def addComponent(self, component: LayoutComp):
+    def addComponent(self, component: LayoutComp, pos) -> None:
         """
         Method that adds component to the layout.
 
         :param component: AbstractComp, a component to add
         :return: none
         """
+        component.move(pos)
         component.initRatio(self._projSize, self.size())
         self._actualLayout.addWidget(component)
         if (self._project != None):

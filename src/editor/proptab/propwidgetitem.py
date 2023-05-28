@@ -74,7 +74,7 @@ class PropWidgetItem(QTreeWidgetItem):
 
 
     def _createColorDialog(self):
-        color = QColorDialog(QColor(self.getValue()), self._treeWidget)
+        color = QColorDialog(QColor(self._prop.getValue()), self._treeWidget)
         if (color.exec() == QColorDialog.DialogCode.Accepted):
             self.callBack(self, color.currentColor().name())
             self.editWidget.setStyleSheet(f"background-color:{color.currentColor().name()}")
