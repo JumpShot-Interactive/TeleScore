@@ -4,12 +4,14 @@ Written by: riscyseven
 """
 
 # This Python file uses the following encoding: utf-8
-from PyQt6.QtCore import QSize, Qt, pyqtSignal
-from PyQt6.QtWidgets import QFrame
-from PyQt6.QtGui import QPaintEvent, QPixmap, QPainter
+from PyQt6.QtCore import QSize, pyqtSignal
+from PyQt6.QtWidgets import QFrame, QBoxLayout
+
+from abstract.layoutcomp import LayoutComp
+
+from PyQt6.QtGui import QPainter, QPixmap, QPaintEvent
 
 from layout.abstract_layout.freelayout import FreeLayout
-from abstract.layoutcomp import LayoutComp
 
 
 class CtrlLayout(QFrame):
@@ -27,7 +29,7 @@ class CtrlLayout(QFrame):
         self._projSize = None
         self._project = project
 
-        self.setLayout(self._actualLayout)
+        self.setLayout(QBoxLayout(QBoxLayout.Direction.TopToBottom))
         self.setSize(projSize)
         self.setAcceptDrops(True)
 
@@ -41,9 +43,9 @@ class CtrlLayout(QFrame):
 
 
     def setSize(self, size: QSize):
-        if (self._projSize != size):
+        '''if (self._projSize != size):
             for comp in self._actualLayout.getLOWidgets():
-                comp.initRatio(size, size)
+                comp.initRatio(size, size)'''
 
         self._projSize = size
 
@@ -60,10 +62,8 @@ class CtrlLayout(QFrame):
         :param event: QResizeEvent information 
         :return: none
         """
-        for comp in self._actualLayout.getLOWidgets():
-            comp.parentResized(size)
-
-
+        '''for comp in self._actualLayout.getLOWidgets():
+            comp.parentResized(size)'''
 
     def addComponent(self, component: LayoutComp):
         """
@@ -147,7 +147,8 @@ class CtrlLayout(QFrame):
 
     
     def getLOComp(self) -> list:
-        return self._actualLayout.getLOWidgets()
+        #return self._actualLayout.getLOWidgets()
+        return []
 
     
     def moveUp(self, comp: LayoutComp):
