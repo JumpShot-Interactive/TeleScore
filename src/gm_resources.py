@@ -3,7 +3,7 @@ Developed By: JumpShot Team
 Written by: TheLittleDoc, riscyseven
 """
 
-import os, sys
+import os
 from PyQt6.QtWidgets import QMessageBox
 import requests
 import webbrowser

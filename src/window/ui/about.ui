@@ -22,7 +22,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Version: 1.0.2 Beta</string>
+      <string>Version: 1.0.3 Beta Preview 1</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
