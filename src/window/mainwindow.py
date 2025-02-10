@@ -46,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Setting up the toolbar
         self.toolBar.addWidget(QtWidgets.QPushButton(QIcon(resourcePath("src/resources/icon.ico")),
-         " TeleScore v1.0.2 Beta"))
+         " TeleScore v1.0.3 Beta Preview 1"))
         self.toolBar.addSeparator()
         self.editModeButton = QtWidgets.QPushButton("Editor Mode")
         self.toolBar.addWidget(self.editModeButton)
